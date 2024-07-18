@@ -3,7 +3,7 @@ import { HealthCheckController } from './health-check.controller';
 import { HealthCheckService } from './health-check.service';
 
 const fakeHealthCheckService: Partial<HealthCheckService> = {
-  getHealthCheck: () => 'fakeHealthCheckService',
+  getHealthCheck: jest.fn(),
 };
 
 describe('HealthCheckController', () => {
@@ -24,7 +24,7 @@ describe('HealthCheckController', () => {
   });
 
   it('should be defined', () => {
-    const chc = controller.getHealthCheck();
-    expect(chc).toBe('fakeHealthCheckService');
+    controller.getHealthCheck();
+    expect(fakeHealthCheckService.getHealthCheck).toHaveBeenCalled();
   });
 });
