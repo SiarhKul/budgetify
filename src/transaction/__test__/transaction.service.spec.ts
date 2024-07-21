@@ -1,32 +1,57 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionService } from '../transaction.service';
-import { TransactionDto } from '../dto/transaction.dto';
-import { Categories, TransactionType } from '../../enums/common';
 import { Transaction } from '../../schemas/transaction.schema';
+import { getModelToken } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
+import {
+  TRANSACTION_DTO_DUMMY,
+  TransactionModel,
+} from '../../helpers/tests/doubles';
+
+class FakeTransactionModel {
+  constructor(private _: any) {}
+  new = jest.fn().mockResolvedValue({});
+
+  save = jest
+    .fn()
+    .mockResolvedValue(new TransactionModel(TRANSACTION_DTO_DUMMY));
+}
 
 describe('TransactionService', () => {
   let service: TransactionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TransactionService],
+      providers: [
+        TransactionService,
+        {
+          useValue: FakeTransactionModel,
+          provide: getModelToken(Transaction.name),
+        },
+      ],
     }).compile();
 
     service = module.get<TransactionService>(TransactionService);
   });
 
-  it('should be defined', () => {
-    const incomingTransactionModel = {
-      transactionType: TransactionType.INCOME,
-      title: 'some title',
-      categories: Categories.HOME,
-      amount: 1,
-      paymentDate: '2023-07-19T00:00:00.000Z',
-      payee: 'Jone Doe',
-      description: 'dummy description',
-    };
-    const dto = new TransactionDto();
+  it('should create a transaction successfully', async () => {
+    const {
+      _id,
+      transactionType,
+      title,
+      categories,
+      amount,
+      payee,
+      description,
+    } = await service.createTransaction(TRANSACTION_DTO_DUMMY);
 
-    expect(service).toBeDefined();
+    expect(transactionType).toEqual(TRANSACTION_DTO_DUMMY.transactionType);
+    expect(title).toEqual(TRANSACTION_DTO_DUMMY.title);
+    expect(categories).toEqual(TRANSACTION_DTO_DUMMY.categories);
+    expect(amount).toEqual(TRANSACTION_DTO_DUMMY.amount);
+    expect(payee).toEqual(TRANSACTION_DTO_DUMMY.payee);
+    expect(description).toEqual(TRANSACTION_DTO_DUMMY.description);
+
+    expect(_id).toBeInstanceOf(ObjectId);
   });
 });

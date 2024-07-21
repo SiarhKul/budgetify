@@ -11,7 +11,7 @@ export class TransactionService {
     private transactionModel: Model<Transaction>,
   ) {}
 
-  createTransaction(transaction: TransactionDto): Promise<Transaction> {
+  createTransaction(transaction: TransactionDto) {
     const newTransaction = new this.transactionModel(transaction);
 
     return newTransaction.save();

@@ -5,6 +5,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
 
+//todo: manage by App Config
 const MDC =
   'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses';
 

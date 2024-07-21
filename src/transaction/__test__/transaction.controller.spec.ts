@@ -2,33 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionController } from '../transaction.controller';
 import { TransactionService } from '../transaction.service';
 import { TransactionDto } from '../dto/transaction.dto';
-import { Categories, TransactionType } from '../../enums/common';
+import {
+  TRANSACTION_DTO_DUMMY,
+  TransactionModel,
+} from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
-import { Transaction } from '../../schemas/transaction.schema';
-
-const TRANSACTION_DTO: TransactionDto = {
-  transactionType: TransactionType.INCOME,
-  title: 'some title',
-  categories: Categories.HOME,
-  amount: 1,
-  paymentDate: new Date(),
-  payee: 'Jon Doe',
-  description: 'Describe',
-};
-
-const TRANSACTION_MODEL = {
-  ...TRANSACTION_DTO,
-  _id: new ObjectId(),
-};
 
 const mockTransactionService: Partial<TransactionService> = {
   createTransaction: jest
     .fn()
     .mockImplementation((transaction: TransactionDto) => {
-      const newTransaction = new Transaction();
-      Object.assign(newTransaction, transaction);
-
-      return { ...newTransaction, _id: TRANSACTION_MODEL._id };
+      return new TransactionModel(transaction);
     }),
 };
 
@@ -50,8 +34,12 @@ describe('TransactionController', () => {
   });
 
   it('should return the created transaction when valid data is provided', async () => {
-    const resCall = await controller.create(TRANSACTION_DTO);
+    const transaction = await controller.create(TRANSACTION_DTO_DUMMY);
 
-    expect(resCall).toEqual(TRANSACTION_MODEL);
+    expect(transaction.transactionType).toEqual(
+      TRANSACTION_DTO_DUMMY.transactionType,
+    );
+    expect(transaction.title).toEqual(TRANSACTION_DTO_DUMMY.title);
+    expect(transaction._id).toBeInstanceOf(ObjectId);
   });
 });
