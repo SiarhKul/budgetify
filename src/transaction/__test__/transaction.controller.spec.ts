@@ -1,18 +1,57 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionController } from '../transaction.controller';
+import { TransactionService } from '../transaction.service';
+import { TransactionDto } from '../dto/transaction.dto';
+import { Categories, TransactionType } from '../../enums/common';
+import { ObjectId } from 'mongodb';
+import { Transaction } from '../../schemas/transaction.schema';
+
+const TRANSACTION_DTO: TransactionDto = {
+  transactionType: TransactionType.INCOME,
+  title: 'some title',
+  categories: Categories.HOME,
+  amount: 1,
+  paymentDate: new Date(),
+  payee: 'Jon Doe',
+  description: 'Describe',
+};
+
+const TRANSACTION_MODEL = {
+  ...TRANSACTION_DTO,
+  _id: new ObjectId(),
+};
 
 describe('TransactionController', () => {
   let controller: TransactionController;
+  // let service: TransactionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionController],
+      providers: [
+        {
+          provide: TransactionService,
+          useValue: {
+            createTransaction: jest
+              .fn()
+              .mockImplementation((transaction: TransactionDto) => {
+                const newTransaction = new Transaction();
+                Object.assign(newTransaction, transaction);
+
+                return { ...newTransaction, _id: TRANSACTION_MODEL._id };
+              }),
+          },
+        },
+      ],
     }).compile();
 
-    controller = module.get<TransactionController>(TransactionController);
+    controller = module.get(TransactionController);
+    // service = module.get(TransactionService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('should return the created transaction when valid data is provided', async () => {
+    const resCall = await controller.create(TRANSACTION_DTO);
+
+    expect(resCall).toEqual(TRANSACTION_MODEL);
   });
 });

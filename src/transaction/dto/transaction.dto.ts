@@ -1,10 +1,4 @@
-import {
-  IsDate,
-  IsDateString,
-  IsEnum,
-  IsPositive,
-  MinLength,
-} from 'class-validator';
+import { IsDateString, IsEnum, IsPositive, MinLength } from 'class-validator';
 import { Categories, TransactionType } from '../../enums/common';
 
 export class TransactionDto {
