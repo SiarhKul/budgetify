@@ -21,9 +21,19 @@ const TRANSACTION_MODEL = {
   _id: new ObjectId(),
 };
 
+const mockTransactionService: Partial<TransactionService> = {
+  createTransaction: jest
+    .fn()
+    .mockImplementation((transaction: TransactionDto) => {
+      const newTransaction = new Transaction();
+      Object.assign(newTransaction, transaction);
+
+      return { ...newTransaction, _id: TRANSACTION_MODEL._id };
+    }),
+};
+
 describe('TransactionController', () => {
   let controller: TransactionController;
-  // let service: TransactionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,22 +41,12 @@ describe('TransactionController', () => {
       providers: [
         {
           provide: TransactionService,
-          useValue: {
-            createTransaction: jest
-              .fn()
-              .mockImplementation((transaction: TransactionDto) => {
-                const newTransaction = new Transaction();
-                Object.assign(newTransaction, transaction);
-
-                return { ...newTransaction, _id: TRANSACTION_MODEL._id };
-              }),
-          },
+          useValue: mockTransactionService,
         },
       ],
     }).compile();
 
     controller = module.get(TransactionController);
-    // service = module.get(TransactionService);
   });
 
   it('should return the created transaction when valid data is provided', async () => {
