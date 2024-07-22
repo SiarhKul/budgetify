@@ -3,25 +3,25 @@ import { Categories, TransactionType } from '../enums/common';
 
 @Schema({ versionKey: false })
 export class Transaction {
-  @Prop({ required: true, enum: TransactionType })
+  @Prop({ type: String, required: true, enum: TransactionType })
   transactionType: TransactionType;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   title: string;
 
-  @Prop({ required: true, enum: Categories })
+  @Prop({ type: String, required: true, enum: Categories })
   categories: Categories;
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   amount: number;
 
-  @Prop({ required: true })
+  @Prop({ type: Date, required: true })
   paymentDate: Date;
 
-  @Prop()
+  @Prop({ type: String, required: false })
   payee: string;
 
-  @Prop()
+  @Prop({ type: String, required: false })
   description: string;
 }
 

@@ -1,4 +1,10 @@
-import { IsDateString, IsEnum, IsPositive, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsPositive,
+  MinLength,
+} from 'class-validator';
 import { Categories, TransactionType } from '../../enums/common';
 
 export class TransactionDto {
@@ -23,7 +29,9 @@ export class TransactionDto {
   @IsDateString()
   paymentDate: Date;
 
-  payee: string;
+  @IsOptional()
+  payee?: string;
 
-  description: string;
+  @IsOptional()
+  description?: string;
 }
