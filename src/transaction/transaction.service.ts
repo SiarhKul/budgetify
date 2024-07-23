@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from '../schemas/transaction.schema';
 import { Model } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class TransactionService {
@@ -15,5 +16,8 @@ export class TransactionService {
     const newTransaction = new this.transactionModel(transaction);
 
     return newTransaction.save();
+  }
+  deleteTransaction(id: ObjectId) {
+    return this.transactionModel.findByIdAndDelete(id);
   }
 }
