@@ -4,13 +4,25 @@ import { AppService } from './app.service';
 import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
-
-//todo: manage by App Config
-const MDC =
-  'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { useFactoryReturn } from '../config/config.mongo';
+import properties from '../config/config.parameters';
 
 @Module({
-  imports: [MongooseModule.forRoot(MDC), TransactionModule],
+  imports: [
+    TransactionModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      load: [properties],
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        useFactoryReturn(configService),
+    }),
+  ],
   controllers: [AppController],
   providers: [
     AppService,
