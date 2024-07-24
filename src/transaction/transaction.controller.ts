@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionService } from './transaction.service';
-
-import { ObjectId } from 'mongodb';
+import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 
 @Controller('transaction')
 export class TransactionController {
@@ -14,7 +13,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.transactionService.deleteTransaction(new ObjectId(id));
+  delete(@ParamMongoObjectId('id') id: string) {
+    return this.transactionService.deleteTransaction(id);
   }
 }

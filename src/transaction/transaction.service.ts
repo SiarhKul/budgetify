@@ -1,23 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from '../schemas/transaction.schema';
 import { Model } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectModel(Transaction.name)
-    private transactionModel: Model<Transaction>,
+    private readonly transactionModel: Model<Transaction>,
   ) {}
 
-  createTransaction(transaction: TransactionDto) {
-    const newTransaction = new this.transactionModel(transaction);
-
-    return newTransaction.save();
+  async createTransaction(transaction: TransactionDto) {
+    return await this.transactionModel.create(transaction);
   }
-  deleteTransaction(id: ObjectId) {
-    return this.transactionModel.findByIdAndDelete(id);
+
+  async deleteTransaction(id: string) {
+    const deletedTransaction =
+      await this.transactionModel.findByIdAndDelete(id);
+
+    if (!deletedTransaction) {
+      throw new NotFoundException('No transaction found with the given id');
+    }
+
+    return deletedTransaction;
   }
 }
