@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from '../schemas/transaction.schema';
-import { Model } from 'mongoose';
+import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 
 @Injectable()
@@ -15,9 +15,14 @@ export class TransactionService {
     return await this.transactionModel.create(transaction);
   }
 
-  async deleteTransaction(id: string) {
-    const deletedTransaction =
-      await this.transactionModel.findByIdAndDelete(id);
+  async deleteTransaction(id: string): Promise<{ _id: Types.ObjectId }> {
+    const deletedTransaction = await this.transactionModel.findByIdAndDelete(
+      id,
+      {
+        lean: true,
+        select: '_id',
+      },
+    );
 
     if (!deletedTransaction) {
       throw new NotFoundException('No transaction found with the given id');

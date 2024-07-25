@@ -17,3 +17,5 @@ export const TRANSACTION_DTO_DUMMY: TransactionDto = {
   payee: 'Jon Doe',
   description: 'dummy description',
 };
+
+export const OBJECT_ID_DUMMY = '669e8c31d88d0ec8e0ffc467';
