@@ -23,7 +23,7 @@ const mockTransactionModel = {
   findByIdAndUpdate: jest.fn(),
 };
 
-describe('TransactionService', () => {
+describe('GIVEN TransactionService', () => {
   let service: TransactionService;
 
   beforeEach(async () => {
@@ -46,65 +46,69 @@ describe('TransactionService', () => {
     expect(result._id).toBeInstanceOf(ObjectId);
   });
 
-  it('should delete a transaction and return it', async () => {
-    const deleteAbleTransaction = { _id: '1' };
-    mockTransactionModel.findByIdAndDelete.mockResolvedValue(
-      deleteAbleTransaction,
-    );
-
-    const result = await service.deleteTransaction(deleteAbleTransaction._id);
-
-    expect(result).toEqual(deleteAbleTransaction);
-    expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith(
-      deleteAbleTransaction._id,
-      {
-        lean: true,
-        select: '_id',
-      },
-    );
-  });
-
-  it('should throw an error when deleting a non-existing transaction', async () => {
-    mockTransactionModel.findByIdAndDelete.mockResolvedValue(null);
-
-    await expect(service.deleteTransaction('1')).rejects.toThrow(
-      NotFoundException,
-    );
-    expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith('1', {
-      lean: true,
-      select: '_id',
-    });
-  });
-
   it('should return list of transactions', async () => {
     const transactions = await service.getAllTransactions();
     expect(transactions.length).toBeGreaterThan(0);
     expect(transactions[0]._id).toBeInstanceOf(ObjectId);
   });
 
-  it('should return updated transaction', async () => {
-    mockTransactionModel.findByIdAndUpdate.mockResolvedValue(
-      new TransactionModel(TRANSACTION_DTO_DUMMY),
-    );
+  describe('GIVEN TransactionService.deleteTransaction', () => {
+    it('should delete a transaction and return it', async () => {
+      const deleteAbleTransaction = { _id: '1' };
+      mockTransactionModel.findByIdAndDelete.mockResolvedValue(
+        deleteAbleTransaction,
+      );
 
-    const transaction = await service.updateTransaction(
-      '1',
-      TRANSACTION_DTO_DUMMY,
-    );
+      const result = await service.deleteTransaction(deleteAbleTransaction._id);
 
-    expect(transaction._id).toBeInstanceOf(ObjectId);
-    expect(mockTransactionModel.findByIdAndUpdate).toHaveBeenCalledWith(
-      '1',
-      TRANSACTION_DTO_DUMMY,
-      { new: true },
-    );
+      expect(result).toEqual(deleteAbleTransaction);
+      expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith(
+        deleteAbleTransaction._id,
+        {
+          lean: true,
+          select: '_id',
+        },
+      );
+    });
+
+    it('should throw an error when deleting a non-existing transaction', async () => {
+      mockTransactionModel.findByIdAndDelete.mockResolvedValue(null);
+
+      await expect(service.deleteTransaction('1')).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith('1', {
+        lean: true,
+        select: '_id',
+      });
+    });
   });
 
-  it('should throw an error when updating a non-existing transaction', async () => {
-    mockTransactionModel.findByIdAndUpdate.mockResolvedValue(null);
+  describe('GIVEN TransactionService.updateTransaction', () => {
+    it('should return updated transaction', async () => {
+      mockTransactionModel.findByIdAndUpdate.mockResolvedValue(
+        new TransactionModel(TRANSACTION_DTO_DUMMY),
+      );
 
-    await expect(
-      service.updateTransaction('1', TRANSACTION_DTO_DUMMY),
-    ).rejects.toThrow(NotFoundException);
+      const transaction = await service.updateTransaction(
+        '1',
+        TRANSACTION_DTO_DUMMY,
+      );
+
+      expect(transaction._id).toBeInstanceOf(ObjectId);
+      expect(mockTransactionModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        '1',
+        TRANSACTION_DTO_DUMMY,
+        { new: true },
+      );
+    });
+
+    it('should throw an error when updating a non-existing transaction', async () => {
+      mockTransactionModel.findByIdAndUpdate.mockResolvedValue(null);
+
+      await expect(
+        service.updateTransaction('1', TRANSACTION_DTO_DUMMY),
+      ).rejects.toThrow(NotFoundException);
+    });
   });
 });
