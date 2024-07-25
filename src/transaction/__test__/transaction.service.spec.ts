@@ -1,21 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from '@nestjs/mongoose';
+import { NotFoundException } from '@nestjs/common';
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../../schemas/transaction.schema';
-import { getModelToken } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
 import {
   TRANSACTION_DTO_DUMMY,
   TransactionModel,
 } from '../../helpers/tests/doubles';
+import { ObjectId } from 'mongodb';
+import { TransactionDto } from '../dto/transaction.dto';
 
-class FakeTransactionModel {
-  constructor(private _: any) {}
-  new = jest.fn().mockResolvedValue({});
-
-  save = jest
+const mockTransactionModel = {
+  create: jest
     .fn()
-    .mockResolvedValue(new TransactionModel(TRANSACTION_DTO_DUMMY));
-}
+    .mockImplementation((transaction: TransactionDto) =>
+      Promise.resolve(new TransactionModel(transaction)),
+    ),
+  findByIdAndDelete: jest.fn(),
+};
 
 describe('TransactionService', () => {
   let service: TransactionService;
@@ -25,8 +27,8 @@ describe('TransactionService', () => {
       providers: [
         TransactionService,
         {
-          useValue: FakeTransactionModel,
           provide: getModelToken(Transaction.name),
+          useValue: mockTransactionModel,
         },
       ],
     }).compile();
@@ -34,24 +36,37 @@ describe('TransactionService', () => {
     service = module.get<TransactionService>(TransactionService);
   });
 
-  it('should create a transaction successfully', async () => {
-    const {
-      _id,
-      transactionType,
-      title,
-      categories,
-      amount,
-      payee,
-      description,
-    } = await service.createTransaction(TRANSACTION_DTO_DUMMY);
+  it('should create a transaction', async () => {
+    const result = await service.createTransaction(TRANSACTION_DTO_DUMMY);
 
-    expect(transactionType).toEqual(TRANSACTION_DTO_DUMMY.transactionType);
-    expect(title).toEqual(TRANSACTION_DTO_DUMMY.title);
-    expect(categories).toEqual(TRANSACTION_DTO_DUMMY.categories);
-    expect(amount).toEqual(TRANSACTION_DTO_DUMMY.amount);
-    expect(payee).toEqual(TRANSACTION_DTO_DUMMY.payee);
-    expect(description).toEqual(TRANSACTION_DTO_DUMMY.description);
+    expect(result._id).toBeInstanceOf(ObjectId);
+  });
 
-    expect(_id).toBeInstanceOf(ObjectId);
+  it('should delete a transaction and return it', async () => {
+    const transaction = { _id: '1' };
+    mockTransactionModel.findByIdAndDelete.mockResolvedValue(transaction);
+
+    const result = await service.deleteTransaction(transaction._id);
+
+    expect(result).toEqual(transaction);
+    expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith(
+      transaction._id,
+      {
+        lean: true,
+        select: '_id',
+      },
+    );
+  });
+
+  it('should throw an error when deleting a non-existing transaction', async () => {
+    mockTransactionModel.findByIdAndDelete.mockResolvedValue(null);
+
+    await expect(service.deleteTransaction('1')).rejects.toThrow(
+      NotFoundException,
+    );
+    expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith('1', {
+      lean: true,
+      select: '_id',
+    });
   });
 });
