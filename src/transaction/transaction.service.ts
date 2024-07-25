@@ -15,6 +15,10 @@ export class TransactionService {
     return this.transactionModel.create(transaction);
   }
 
+  async getAllTransactions() {
+    return this.transactionModel.find();
+  }
+
   async deleteTransaction(id: string): Promise<{ _id: Types.ObjectId }> {
     const deletedTransaction = await this.transactionModel.findByIdAndDelete(
       id,
