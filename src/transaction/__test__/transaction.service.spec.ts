@@ -11,12 +11,15 @@ import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
 
 const mockTransactionModel = {
+  findByIdAndDelete: jest.fn(),
   create: jest
     .fn()
     .mockImplementation((transaction: TransactionDto) =>
       Promise.resolve(new TransactionModel(transaction)),
     ),
-  findByIdAndDelete: jest.fn(),
+  find: jest
+    .fn()
+    .mockResolvedValue([new TransactionModel(TRANSACTION_DTO_DUMMY)]),
 };
 
 describe('TransactionService', () => {
@@ -70,5 +73,11 @@ describe('TransactionService', () => {
       lean: true,
       select: '_id',
     });
+  });
+
+  it('should return list of transactions', async () => {
+    const transactions = await service.getAllTransactions();
+    expect(transactions.length).toBeGreaterThan(0);
+    expect(transactions[0]._id).toBeInstanceOf(ObjectId);
   });
 });
