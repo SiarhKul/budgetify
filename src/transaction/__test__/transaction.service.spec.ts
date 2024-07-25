@@ -20,6 +20,7 @@ const mockTransactionModel = {
   find: jest
     .fn()
     .mockResolvedValue([new TransactionModel(TRANSACTION_DTO_DUMMY)]),
+  findByIdAndUpdate: jest.fn(),
 };
 
 describe('TransactionService', () => {
@@ -79,5 +80,31 @@ describe('TransactionService', () => {
     const transactions = await service.getAllTransactions();
     expect(transactions.length).toBeGreaterThan(0);
     expect(transactions[0]._id).toBeInstanceOf(ObjectId);
+  });
+
+  it('should return updated transaction', async () => {
+    mockTransactionModel.findByIdAndUpdate.mockResolvedValue(
+      new TransactionModel(TRANSACTION_DTO_DUMMY),
+    );
+
+    const transaction = await service.updateTransaction(
+      '1',
+      TRANSACTION_DTO_DUMMY,
+    );
+
+    expect(transaction._id).toBeInstanceOf(ObjectId);
+    expect(mockTransactionModel.findByIdAndUpdate).toHaveBeenCalledWith(
+      '1',
+      TRANSACTION_DTO_DUMMY,
+      { new: true },
+    );
+  });
+
+  it('should throw an error when updating a non-existing transaction', async () => {
+    mockTransactionModel.findByIdAndUpdate.mockResolvedValue(null);
+
+    await expect(
+      service.updateTransaction('1', TRANSACTION_DTO_DUMMY),
+    ).rejects.toThrow(NotFoundException);
   });
 });
