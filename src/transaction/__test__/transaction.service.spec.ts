@@ -43,14 +43,16 @@ describe('TransactionService', () => {
   });
 
   it('should delete a transaction and return it', async () => {
-    const transaction = { _id: '1' };
-    mockTransactionModel.findByIdAndDelete.mockResolvedValue(transaction);
+    const deleteAbleTransaction = { _id: '1' };
+    mockTransactionModel.findByIdAndDelete.mockResolvedValue(
+      deleteAbleTransaction,
+    );
 
-    const result = await service.deleteTransaction(transaction._id);
+    const result = await service.deleteTransaction(deleteAbleTransaction._id);
 
-    expect(result).toEqual(transaction);
+    expect(result).toEqual(deleteAbleTransaction);
     expect(mockTransactionModel.findByIdAndDelete).toHaveBeenCalledWith(
-      transaction._id,
+      deleteAbleTransaction._id,
       {
         lean: true,
         select: '_id',
