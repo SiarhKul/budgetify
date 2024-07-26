@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
+import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -14,5 +15,18 @@ export class PiggyBankController {
   @Get()
   getAllPiggyBanks() {
     return this.piggyBankService.getAllPiggyBanks();
+  }
+
+  @Put(':id')
+  updatePiggyBank(
+    @ParamMongoObjectId('id') id: string,
+    @Body() piggyBank: PiggyBankDto,
+  ) {
+    return this.piggyBankService.updatePiggyBank(id, piggyBank);
+  }
+
+  @Delete(':id')
+  deletePiggyBank(@ParamMongoObjectId('id') id: string) {
+    return this.piggyBankService.deletePiggyBank(id);
   }
 }
