@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 
@@ -9,5 +9,10 @@ export class PiggyBankController {
   @Post()
   create(@Body() piggyBank: PiggyBankDto) {
     return this.piggyBankService.createBiggyBank(piggyBank);
+  }
+
+  @Get()
+  getAllPiggyBanks() {
+    return this.piggyBankService.getAllPiggyBanks();
   }
 }

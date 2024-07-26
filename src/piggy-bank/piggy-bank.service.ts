@@ -14,4 +14,8 @@ export class PiggyBankService {
   createBiggyBank(piggyBank: PiggyBankDto) {
     return this.piggyBankModel.create(piggyBank);
   }
+
+  async getAllPiggyBanks() {
+    return this.piggyBankModel.find();
+  }
 }
