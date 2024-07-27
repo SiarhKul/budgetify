@@ -3,7 +3,10 @@ import { PiggyBank } from '../schemas/piggy-bank.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
-import { PiggyBankDeposit } from '../schemas/piggy-bank-deposit.schema';
+import {
+  PiggyBankDeposit,
+  PiggyBankDepositDocument,
+} from '../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 
 @Injectable()
@@ -22,8 +25,7 @@ export class PiggyBankService {
   }
 
   async getAllPiggyBanks() {
-    const lean = await this.piggyBankModel.find();
-    return lean;
+    return this.piggyBankModel.find().populate('deposits');
   }
 
   async updatePiggyBank(id: string, piggyBank: PiggyBankDto) {
@@ -50,8 +52,19 @@ export class PiggyBankService {
     return findByIdAndDelete;
   }
 
-  async depositToPiggyBank(deposit: PiggyBankDepositDto) {
-    console.log('=>(piggy-bank.service.ts:54) deposit', deposit);
-    await this.piggyBankDepositModel.create(deposit);
+  async depositToPiggyBank(
+    deposit: PiggyBankDepositDto,
+  ): Promise<PiggyBankDepositDocument> {
+    const createdDeposit = await this.piggyBankDepositModel.create(deposit);
+
+    await this.piggyBankModel.findByIdAndUpdate(
+      deposit.piggyBankId,
+      {
+        $push: { deposits: createdDeposit._id },
+      },
+      { new: true, useFindAndModify: false },
+    );
+
+    return createdDeposit;
   }
 }
