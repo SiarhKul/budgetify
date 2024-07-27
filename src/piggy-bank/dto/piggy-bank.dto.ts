@@ -1,4 +1,5 @@
-import { IsPositive, MinLength } from 'class-validator';
+import { IsOptional, IsPositive, MinLength } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class PiggyBankDto {
   @MinLength(1, { message: 'Goal is too short' })
@@ -6,4 +7,7 @@ export class PiggyBankDto {
 
   @IsPositive()
   goalAmount: string;
+
+  @IsOptional()
+  deposits: ObjectId[] = [];
 }

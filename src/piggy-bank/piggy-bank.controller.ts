@@ -2,18 +2,19 @@ import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
   constructor(private readonly piggyBankService: PiggyBankService) {}
 
   @Post()
-  create(@Body() piggyBank: PiggyBankDto) {
+  create(@Body() piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
 
   @Get()
-  getAllPiggyBanks() {
+  getAllPiggyBanks(): Promise<PiggyBankDocument[]> {
     return this.piggyBankService.getAllPiggyBanks();
   }
 
@@ -21,12 +22,15 @@ export class PiggyBankController {
   updatePiggyBank(
     @ParamMongoObjectId('id') id: string,
     @Body() piggyBank: PiggyBankDto,
-  ) {
+  ): Promise<PiggyBankDocument> {
     return this.piggyBankService.updatePiggyBank(id, piggyBank);
   }
 
   @Delete(':id')
-  deletePiggyBank(@ParamMongoObjectId('id') id: string) {
+  deletePiggyBank(
+    @ParamMongoObjectId('id') id: string,
+  ): Promise<PiggyBankDocument> {
+    //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
   }
 }

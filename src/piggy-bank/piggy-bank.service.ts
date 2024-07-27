@@ -12,11 +12,13 @@ export class PiggyBankService {
   ) {}
 
   createBiggyBank(piggyBank: PiggyBankDto) {
+    //todo: handle the case when piggy bank with the same name already exists
     return this.piggyBankModel.create(piggyBank);
   }
 
   async getAllPiggyBanks() {
-    return this.piggyBankModel.find();
+    const lean = await this.piggyBankModel.find();
+    return lean;
   }
 
   async updatePiggyBank(id: string, piggyBank: PiggyBankDto) {
