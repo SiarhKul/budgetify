@@ -6,10 +6,10 @@ export type PiggyBankDocument = HydratedDocument<PiggyBank>;
 
 @Schema({ versionKey: false })
 export class PiggyBank {
-  @Prop({ type: String, required: true, unique: true })
+  @Prop({ required: true, unique: true })
   goal: string;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ required: true })
   goalAmount: number;
 
   @Prop({

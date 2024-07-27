@@ -6,13 +6,13 @@ export type PiggyBankDepositDocument = HydratedDocument<PiggyBankDeposit>;
 
 @Schema({ versionKey: false })
 export class PiggyBankDeposit {
-  @Prop({ type: ObjectId, required: true })
+  @Prop({ required: true })
   piggyBankId: ObjectId;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ required: true })
   amountToSave: number;
 
-  @Prop({ type: Date, required: true })
+  @Prop({ required: true })
   date: Date;
 }
 
