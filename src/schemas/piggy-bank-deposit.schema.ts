@@ -9,7 +9,7 @@ export class PiggyBankDeposit {
   @Prop({ type: ObjectId, required: true })
   piggyBankId: ObjectId;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: Number, required: true })
   amountToSave: number;
 
   @Prop({ type: Date, required: true })

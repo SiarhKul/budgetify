@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { ObjectId } from 'mongodb';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { PiggyBankDeposit } from './piggy-bank-deposit.schema';
 
 export type PiggyBankDocument = HydratedDocument<PiggyBank>;
 
@@ -12,8 +12,14 @@ export class PiggyBank {
   @Prop({ type: Number, required: true })
   goalAmount: number;
 
-  @Prop({ type: [{ type: ObjectId, ref: 'PiggyBankDeposit' }], default: [] })
-  deposits?: ObjectId[];
+  @Prop({
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: PiggyBankDeposit.name },
+    ],
+    required: false,
+    default: [],
+  })
+  deposits?: PiggyBankDeposit[];
 }
 
 export const PiggyBankSchema = SchemaFactory.createForClass(PiggyBank);
