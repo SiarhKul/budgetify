@@ -14,6 +14,16 @@ export class PiggyBankController {
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
 
+  @Post('deposit')
+  depositToPiggyBank(@Body() deposit: PiggyBankDepositDto) {
+    return this.piggyBankService.depositToPiggyBank(deposit);
+  }
+
+  @Post('info')
+  getInfoPiggyBank(@Body() body: { id: string }) {
+    return this.piggyBankService.getCommonPiggyBank(body.id);
+  }
+
   @Get()
   getAllPiggyBanks(): Promise<PiggyBankDocument[]> {
     return this.piggyBankService.getAllPiggyBanks();
@@ -33,10 +43,5 @@ export class PiggyBankController {
   ): Promise<PiggyBankDocument> {
     //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
-  }
-
-  @Post('deposit')
-  depositToPiggyBank(@Body() deposit: PiggyBankDepositDto) {
-    return this.piggyBankService.depositToPiggyBank(deposit);
   }
 }

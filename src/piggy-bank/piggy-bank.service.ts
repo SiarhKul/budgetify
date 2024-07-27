@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PiggyBank } from '../schemas/piggy-bank.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 import {
@@ -66,5 +66,39 @@ export class PiggyBankService {
     );
 
     return createdDeposit;
+  }
+
+  async getCommonPiggyBank(id: string) {
+    // const res = await this.piggyBankModel.findById(id).populate('deposits');
+    //
+    const res = await this.piggyBankModel.aggregate([
+      { $match: { _id: new Types.ObjectId(id) } },
+      { $unwind: '$deposits' },
+      {
+        $lookup: {
+          from: 'piggybankdeposits',
+          localField: 'deposits',
+          foreignField: '_id',
+          as: 'deposits',
+        },
+      },
+      { $unwind: '$deposits' },
+      {
+        $group: {
+          _id: '$_id',
+          goal: { $first: '$goal' },
+          goalAmount: { $first: '$goalAmount' },
+          sumCom: { $sum: '$deposits.amountToSave' },
+        },
+      },
+    ]);
+
+    if (!res) {
+      throw new NotFoundException('No piggy bank found with the given id');
+    }
+
+    console.log('=>(piggy-bank.service.ts:73) res', res);
+
+    return res;
   }
 }
