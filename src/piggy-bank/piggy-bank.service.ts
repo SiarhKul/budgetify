@@ -3,12 +3,17 @@ import { PiggyBank } from '../schemas/piggy-bank.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
+import { PiggyBankDeposit } from '../schemas/piggy-bank-deposit.schema';
+import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 
 @Injectable()
 export class PiggyBankService {
   constructor(
     @InjectModel(PiggyBank.name)
     private piggyBankModel: Model<PiggyBank>,
+
+    @InjectModel(PiggyBankDeposit.name)
+    private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
   ) {}
 
   createBiggyBank(piggyBank: PiggyBankDto) {
@@ -43,5 +48,10 @@ export class PiggyBankService {
     }
 
     return findByIdAndDelete;
+  }
+
+  async depositToPiggyBank(deposit: PiggyBankDepositDto) {
+    console.log('=>(piggy-bank.service.ts:54) deposit', deposit);
+    await this.piggyBankDepositModel.create(deposit);
   }
 }

@@ -3,6 +3,10 @@ import { PiggyBankController } from './piggy-bank.controller';
 import { PiggyBankService } from './piggy-bank.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PiggyBank, PiggyBankSchema } from '../schemas/piggy-bank.schema';
+import {
+  PiggyBankDeposit,
+  PiggyBankDepositSchema,
+} from '../schemas/piggy-bank-deposit.schema';
 
 @Module({
   imports: [
@@ -10,6 +14,10 @@ import { PiggyBank, PiggyBankSchema } from '../schemas/piggy-bank.schema';
       {
         name: PiggyBank.name,
         schema: PiggyBankSchema,
+      },
+      {
+        name: PiggyBankDeposit.name,
+        schema: PiggyBankDepositSchema,
       },
     ]),
   ],

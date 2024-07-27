@@ -3,6 +3,7 @@ import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
+import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -32,5 +33,10 @@ export class PiggyBankController {
   ): Promise<PiggyBankDocument> {
     //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
+  }
+
+  @Post('deposit')
+  depositToPiggyBank(@Body() deposit: PiggyBankDepositDto) {
+    return this.piggyBankService.depositToPiggyBank(deposit);
   }
 }

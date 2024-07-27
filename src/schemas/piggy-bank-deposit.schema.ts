@@ -1,17 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PiggyBank } from './piggy-bank.schema';
+import { HydratedDocument } from 'mongoose';
 import { ObjectId } from 'mongodb';
+
+export type PiggyBankDepositDocument = HydratedDocument<PiggyBankDeposit>;
 
 @Schema({ versionKey: false })
 export class PiggyBankDeposit {
+  @Prop({ type: ObjectId, required: true })
+  piggyBankId: ObjectId;
+
   @Prop({ type: String, required: true })
   amountToSave: number;
 
   @Prop({ type: Date, required: true })
   date: Date;
-
-  @Prop({ type: ObjectId, required: true })
-  piggyBankId: { type: ObjectId; ref: 'PiggyBank' };
 }
 
 export const PiggyBankDepositSchema =
