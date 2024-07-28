@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PiggyBank } from '../schemas/piggy-bank.schema';
+import { PiggyBank, PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
@@ -20,16 +20,19 @@ export class PiggyBankService {
     private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
   ) {}
 
-  createBiggyBank(piggyBank: PiggyBankDto) {
+  createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
     //todo: handle the case when piggy bank with the same name already exists
     return this.piggyBankModel.create(piggyBank);
   }
 
-  async getAllPiggyBanks() {
+  async getAllPiggyBanks(): Promise<PiggyBankDocument[]> {
     return this.piggyBankModel.find().populate('deposits');
   }
 
-  async updatePiggyBank(id: string, piggyBank: PiggyBankDto) {
+  async updatePiggyBank(
+    id: string,
+    piggyBank: PiggyBankDto,
+  ): Promise<PiggyBankDocument> {
     const piggyBankUpdated = await this.piggyBankModel.findByIdAndUpdate(
       id,
       piggyBank,
@@ -43,7 +46,7 @@ export class PiggyBankService {
     return piggyBankUpdated;
   }
 
-  async deletePiggyBank(id: string) {
+  async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
     const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
 
     if (!findByIdAndDelete) {
