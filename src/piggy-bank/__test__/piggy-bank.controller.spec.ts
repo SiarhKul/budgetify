@@ -63,6 +63,9 @@ describe('GIVE PiggyBankController', () => {
     const { _id, deposits, goal, goalAmount } =
       await controller.create(PIGGY_BANK_DTO_DUMMY);
 
+    expect(mockPiggyBankService.createBiggyBank).toHaveBeenCalledWith(
+      PIGGY_BANK_DTO_DUMMY,
+    );
     expect(_id).toBeInstanceOf(ObjectId);
     expect(goal).toEqual(PIGGY_BANK_DTO_DUMMY.goal);
     expect(deposits).toEqual([]);
@@ -74,6 +77,9 @@ describe('GIVE PiggyBankController', () => {
       await controller.depositToPiggyBank(PIGGY_BANK_DEPOSIT_DTO_DUMMY);
 
     expect(_id).toBeInstanceOf(ObjectId);
+    expect(mockPiggyBankService.depositToPiggyBank).toHaveBeenCalledWith(
+      PIGGY_BANK_DEPOSIT_DTO_DUMMY,
+    );
     expect(piggyBankId).toEqual(PIGGY_BANK_DEPOSIT_DTO_DUMMY.piggyBankId);
     expect(amountToSave).toEqual(PIGGY_BANK_DEPOSIT_DTO_DUMMY.amountToSave);
     expect(date).toBe(PIGGY_BANK_DEPOSIT_DTO_DUMMY.date);
@@ -95,12 +101,20 @@ describe('GIVE PiggyBankController', () => {
     expect(piggyBanks[1]._id).toBeInstanceOf(ObjectId);
   });
 
-  it('should updatePiggyBank returns update a piggy bank', async () => {
+  it('should updatePiggyBank called with correct arguments', async () => {
     await controller.updatePiggyBank(OBJECT_ID_DUMMY, PIGGY_BANK_DTO_DUMMY);
 
     expect(mockPiggyBankService.updatePiggyBank).toHaveBeenCalledWith(
       OBJECT_ID_DUMMY,
       PIGGY_BANK_DTO_DUMMY,
+    );
+  });
+
+  it('should deletePiggyBank called with correct arguments', async () => {
+    await controller.deletePiggyBank(OBJECT_ID_DUMMY);
+
+    expect(mockPiggyBankService.deletePiggyBank).toHaveBeenCalledWith(
+      OBJECT_ID_DUMMY,
     );
   });
 });
