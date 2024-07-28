@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PiggyBank, PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -20,8 +24,17 @@ export class PiggyBankService {
     private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
   ) {}
 
-  createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
-    //todo: handle the case when piggy bank with the same name already exists
+  async createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
+    const existingPiggyBank = await this.piggyBankModel.findOne({
+      goal: piggyBank.goal,
+    });
+
+    if (existingPiggyBank) {
+      throw new BadRequestException(
+        'A piggy bank with the same goal already exists',
+      );
+    }
+
     return this.piggyBankModel.create(piggyBank);
   }
 
@@ -73,6 +86,10 @@ export class PiggyBankService {
   }
 
   async getInfoPiggyBank(id: string): Promise<IInfoPiggyBank> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+
     const [piggyBankInfo] = await this.piggyBankModel.aggregate([
       { $match: { _id: new Types.ObjectId(id) } },
       { $unwind: '$deposits' },
