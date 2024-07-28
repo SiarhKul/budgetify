@@ -6,7 +6,7 @@ export class PiggyBankDto {
   goal: string;
 
   @IsPositive()
-  goalAmount: string;
+  goalAmount: number;
 
   @IsOptional()
   deposits: ObjectId[] = [];
