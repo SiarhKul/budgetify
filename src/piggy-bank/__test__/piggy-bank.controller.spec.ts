@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PiggyBankController } from '../piggy-bank.controller';
 import { PiggyBankService } from '../piggy-bank.service';
 import {
+  OBJECT_ID_DUMMY,
   PIGGY_BANK_DEPOSIT_DTO_DUMMY,
   PIGGY_BANK_DTO_DUMMY,
   PiggyBankDepositModel,
@@ -22,8 +23,21 @@ const mockPiggyBankService: Partial<PiggyBankService> = {
     .mockImplementation((deposit: PiggyBankDepositDto) =>
       Promise.resolve(new PiggyBankDepositModel(deposit)),
     ),
-  getInfoPiggyBank: jest.fn(),
-  getAllPiggyBanks: jest.fn(),
+  getInfoPiggyBank: jest.fn().mockImplementation((piggyBankId: string) => {
+    return {
+      _id: piggyBankId,
+      goal: 'House',
+      goalAmount: 100,
+      sumCom: 2,
+    };
+  }),
+
+  getAllPiggyBanks: jest
+    .fn()
+    .mockResolvedValue([
+      new PiggyBankModel(PIGGY_BANK_DTO_DUMMY),
+      new PiggyBankModel(PIGGY_BANK_DTO_DUMMY),
+    ]),
   updatePiggyBank: jest.fn(),
   deletePiggyBank: jest.fn(),
 };
@@ -63,5 +77,30 @@ describe('GIVE PiggyBankController', () => {
     expect(piggyBankId).toEqual(PIGGY_BANK_DEPOSIT_DTO_DUMMY.piggyBankId);
     expect(amountToSave).toEqual(PIGGY_BANK_DEPOSIT_DTO_DUMMY.amountToSave);
     expect(date).toBe(PIGGY_BANK_DEPOSIT_DTO_DUMMY.date);
+  });
+
+  it('should getInfoPiggyBank returns correct piggy bank info', async () => {
+    const infoPiggyBank = await controller.getInfoPiggyBank({
+      id: OBJECT_ID_DUMMY,
+    });
+
+    expect(infoPiggyBank._id).toBe(OBJECT_ID_DUMMY);
+  });
+
+  it('should getAllPiggyBanks returns correct all piggy banks', async () => {
+    const piggyBanks = await controller.getAllPiggyBanks();
+
+    expect(piggyBanks).toHaveLength(2);
+    expect(piggyBanks[0]._id).toBeInstanceOf(ObjectId);
+    expect(piggyBanks[1]._id).toBeInstanceOf(ObjectId);
+  });
+
+  it('should updatePiggyBank returns update a piggy bank', async () => {
+    await controller.updatePiggyBank(OBJECT_ID_DUMMY, PIGGY_BANK_DTO_DUMMY);
+
+    expect(mockPiggyBankService.updatePiggyBank).toHaveBeenCalledWith(
+      OBJECT_ID_DUMMY,
+      PIGGY_BANK_DTO_DUMMY,
+    );
   });
 });
