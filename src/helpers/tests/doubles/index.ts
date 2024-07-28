@@ -1,5 +1,8 @@
 import { TransactionDto } from '../../../transaction/dto/transaction.dto';
-import { Categories, TransactionType } from '../../../enums/common';
+import {
+  Categories,
+  TransactionType,
+} from '../../../ts/transactons/transactions.enums';
 import { TransactionSchema } from '../../../schemas/transaction.schema';
 import mongoose from 'mongoose';
 

@@ -21,7 +21,7 @@ export class PiggyBankController {
 
   @Post('info')
   getInfoPiggyBank(@Body() body: { id: string }) {
-    return this.piggyBankService.getCommonPiggyBank(body.id);
+    return this.piggyBankService.getInfoPiggyBank(body.id);
   }
 
   @Get()

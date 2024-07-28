@@ -1,5 +1,8 @@
 import { IsEnum, IsOptional, IsPositive, MinLength } from 'class-validator';
-import { Categories, TransactionType } from '../../enums/common';
+import {
+  Categories,
+  TransactionType,
+} from '../../ts/transactons/transactions.enums';
 import { IsTypeOfDate } from '../../decorators/IsTypeOfDate';
 
 export class TransactionDto {

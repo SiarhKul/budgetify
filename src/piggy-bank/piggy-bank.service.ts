@@ -8,6 +8,7 @@ import {
   PiggyBankDepositDocument,
 } from '../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
+import { IInfoPiggyBank } from '../ts/piggy-bank/piggy-bank.interfaces';
 
 @Injectable()
 export class PiggyBankService {
@@ -68,10 +69,8 @@ export class PiggyBankService {
     return createdDeposit;
   }
 
-  async getCommonPiggyBank(id: string) {
-    // const res = await this.piggyBankModel.findById(id).populate('deposits');
-    //
-    const res = await this.piggyBankModel.aggregate([
+  async getInfoPiggyBank(id: string): Promise<IInfoPiggyBank> {
+    const [piggyBankInfo] = await this.piggyBankModel.aggregate([
       { $match: { _id: new Types.ObjectId(id) } },
       { $unwind: '$deposits' },
       {
@@ -79,26 +78,24 @@ export class PiggyBankService {
           from: 'piggybankdeposits',
           localField: 'deposits',
           foreignField: '_id',
-          as: 'deposits',
+          as: 'deposits_temp',
         },
       },
-      { $unwind: '$deposits' },
+      { $unwind: '$deposits_temp' },
       {
         $group: {
           _id: '$_id',
           goal: { $first: '$goal' },
           goalAmount: { $first: '$goalAmount' },
-          sumCom: { $sum: '$deposits.amountToSave' },
+          sumCom: { $sum: '$deposits_temp.amountToSave' },
         },
       },
     ]);
 
-    if (!res) {
+    if (!piggyBankInfo) {
       throw new NotFoundException('No piggy bank found with the given id');
     }
 
-    console.log('=>(piggy-bank.service.ts:73) res', res);
-
-    return res;
+    return piggyBankInfo;
   }
 }
