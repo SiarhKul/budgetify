@@ -4,6 +4,7 @@ import { PiggyBankDto } from './dto/piggy-bank.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
+import { PiggyBankDepositDocument } from '../schemas/piggy-bank-deposit.schema';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -15,7 +16,9 @@ export class PiggyBankController {
   }
 
   @Post('deposit')
-  depositToPiggyBank(@Body() deposit: PiggyBankDepositDto) {
+  depositToPiggyBank(
+    @Body() deposit: PiggyBankDepositDto,
+  ): Promise<PiggyBankDepositDocument> {
     return this.piggyBankService.depositToPiggyBank(deposit);
   }
 
