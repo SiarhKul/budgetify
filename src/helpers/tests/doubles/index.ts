@@ -24,6 +24,7 @@ export const TransactionModel = mongoose.model(
 );
 
 export const PiggyBankModel = mongoose.model(PiggyBank.name, PiggyBankSchema);
+
 export const PiggyBankDepositModel = mongoose.model(
   PiggyBankDeposit.name,
   PiggyBankDepositSchema,
@@ -45,7 +46,7 @@ export const TRANSACTION_DTO_DUMMY: TransactionDto = {
 
 export const PIGGY_BANK_DTO_DUMMY: PiggyBankDto = {
   deposits: [],
-  goal: 'House',
+  goal: 'PC',
   goalAmount: 100,
 };
 

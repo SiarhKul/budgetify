@@ -28,6 +28,7 @@ export class PiggyBankService {
     const existingPiggyBank = await this.piggyBankModel.findOne({
       goal: piggyBank.goal,
     });
+    console.log('dddddddddddd', existingPiggyBank);
 
     if (existingPiggyBank) {
       throw new BadRequestException(
