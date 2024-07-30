@@ -86,9 +86,7 @@ describe('GIVE PiggyBankController', () => {
   });
 
   it('should getInfoPiggyBank returns correct piggy bank info', async () => {
-    const infoPiggyBank = await controller.getInfoPiggyBank({
-      id: OBJECT_ID_DUMMY,
-    });
+    const infoPiggyBank = await controller.getInfoPiggyBank(OBJECT_ID_DUMMY);
 
     expect(infoPiggyBank._id).toBe(OBJECT_ID_DUMMY);
   });

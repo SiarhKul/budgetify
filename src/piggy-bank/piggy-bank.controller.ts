@@ -22,9 +22,9 @@ export class PiggyBankController {
     return this.piggyBankService.depositToPiggyBank(deposit);
   }
 
-  @Post('info')
-  getInfoPiggyBank(@Body() body: { id: string }) {
-    return this.piggyBankService.getInfoPiggyBank(body.id);
+  @Get(':id')
+  getInfoPiggyBank(@ParamMongoObjectId('id') id: string) {
+    return this.piggyBankService.getInfoPiggyBank(id);
   }
 
   @Get()
