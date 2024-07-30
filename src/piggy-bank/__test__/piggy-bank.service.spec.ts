@@ -55,7 +55,7 @@ describe('GIVEN PiggyBankService', () => {
 
     service = module.get<PiggyBankService>(PiggyBankService);
   });
-  // Arrange, Act and Assert
+
   describe('GIVEN createBiggyBank', () => {
     it('should throw the exception if piggy bank is created', async () => {
       //Arrange
