@@ -32,12 +32,8 @@ const mockPiggyBankModel = {
   aggregate: jest.fn(),
 };
 
-const mockPiggyBankDepositModel: Partial<Model<PiggyBankDeposit>> = {
-  create: jest.fn().mockImplementation((dto: PiggyBankDepositDto) => {
-    const piggyBankDeposit = new PiggyBankDepositModel(dto);
-    piggyBankDeposit._id = new ObjectId(OBJECT_ID_DUMMY);
-    return Promise.resolve(piggyBankDeposit);
-  }),
+const mockPiggyBankDepositModel = {
+  create: jest.fn(),
 };
 
 describe('GIVEN PiggyBankService', () => {
@@ -61,7 +57,7 @@ describe('GIVEN PiggyBankService', () => {
     service = module.get<PiggyBankService>(PiggyBankService);
   });
 
-  describe('GIVEN PiggyBankService.createBiggyBank', () => {
+  describe('GIVEN createBiggyBank', () => {
     it('should throw the exception if piggy bank is created', async () => {
       mockPiggyBankModel.findOne.mockImplementation((dto: PiggyBankDto) =>
         Promise.resolve(new PiggyBankModel(dto)),
@@ -122,7 +118,7 @@ describe('GIVEN PiggyBankService', () => {
     ).rejects.toThrow(NotFoundException);
   });
 
-  describe('GIVEN PiggyBank.deletePiggyBank', () => {
+  describe('GIVEN deletePiggyBank', () => {
     it('should deletePiggyBank delete piggy bank by an Id', async () => {
       mockPiggyBankModel.findByIdAndDelete.mockImplementation((id) => {
         const piggyBankModel = new PiggyBankModel(PIGGY_BANK_DTO_DUMMY);
@@ -143,8 +139,17 @@ describe('GIVEN PiggyBankService', () => {
     });
   });
 
-  it('should ', async () => {
+  it('should depositToPiggyBank deposits to piggy bank', async () => {
+    const ID_DUMMY = new ObjectId(OBJECT_ID_DUMMY);
+
     mockPiggyBankModel.findByIdAndUpdate.mockReturnValue({});
+    mockPiggyBankDepositModel.create.mockImplementation(
+      (dto: PiggyBankDepositDto) => {
+        const piggyBankDeposit = new PiggyBankDepositModel(dto);
+        piggyBankDeposit._id = ID_DUMMY;
+        return Promise.resolve(piggyBankDeposit);
+      },
+    );
 
     await service.depositToPiggyBank(PIGGY_BANK_DEPOSIT_DTO_DUMMY);
 
@@ -152,8 +157,8 @@ describe('GIVEN PiggyBankService', () => {
       PIGGY_BANK_DEPOSIT_DTO_DUMMY,
     );
     expect(mockPiggyBankModel.findByIdAndUpdate).toHaveBeenCalledWith(
-      OBJECT_ID_DUMMY,
-      { $push: { deposits: new ObjectId(OBJECT_ID_DUMMY) } },
+      ID_DUMMY,
+      { $push: { deposits: ID_DUMMY } },
       { new: true, useFindAndModify: false },
     );
   });
