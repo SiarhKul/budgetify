@@ -7,10 +7,12 @@ import { TransactionModule } from './transaction/transaction.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { useFactoryReturn } from '../config/config.mongo';
 import properties from '../config/config.parameters';
+import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
 
 @Module({
   imports: [
     TransactionModule,
+    PiggyBankModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,

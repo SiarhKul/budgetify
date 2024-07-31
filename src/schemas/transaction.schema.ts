@@ -1,5 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Categories, TransactionType } from '../enums/common';
+import {
+  Categories,
+  TransactionType,
+} from '../ts/transactons/transactions.enums';
 
 @Schema({ versionKey: false })
 export class Transaction {
