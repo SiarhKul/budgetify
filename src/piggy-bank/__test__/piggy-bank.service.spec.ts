@@ -7,6 +7,7 @@ import {
   PIGGY_BANK_DTO_DUMMY,
   PiggyBankDepositModel,
   PiggyBankModel,
+  USER_ID_DUMMY,
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 import { getModelToken } from '@nestjs/mongoose';
@@ -94,7 +95,7 @@ describe('GIVEN PiggyBankService', () => {
 
   it('should getAllPiggyBanks be called with "deposit"', async () => {
     //Act
-    await service.getAllPiggyBanks();
+    await service.getAllPiggyBanks(USER_ID_DUMMY);
 
     //Assert
     expect(mockPiggyBankModel.find().populate).toHaveBeenCalledWith('deposits');

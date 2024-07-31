@@ -62,10 +62,7 @@ export class PiggyBankController {
   }
   //done
   @Get(':id')
-  getInfoPiggyBank(
-    @ParamMongoObjectId('id') id: string,
-    @Headers('Authorization') tempUserId: string,
-  ) {
-    return this.piggyBankService.getInfoPiggyBank(id, tempUserId);
+  getInfoPiggyBank(@ParamMongoObjectId('id') id: string) {
+    return this.piggyBankService.getInfoPiggyBank(id);
   }
 }
