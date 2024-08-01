@@ -40,7 +40,6 @@ export class PiggyBankController {
   getAllPiggyBanks(
     @Headers('Authorization') tempUserId: string,
   ): Promise<PiggyBankDocument[]> {
-    console.log('headers', tempUserId);
     return this.piggyBankService.getAllPiggyBanks(tempUserId);
   }
 
