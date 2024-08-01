@@ -9,8 +9,8 @@ export class Account {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ type: String, required: false })
-  currency: string;
+  @Prop({ type: String, enum: Currency, required: false })
+  currency: Currency;
 
   @Prop({ required: true })
   description: string;
