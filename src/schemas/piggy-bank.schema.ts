@@ -1,14 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { PiggyBankDeposit } from './piggy-bank-deposit.schema';
-import { User } from './user.schema';
+import { ObjectId } from 'mongodb';
 
 export type PiggyBankDocument = HydratedDocument<PiggyBank>;
 
 @Schema({ versionKey: false })
 export class PiggyBank {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  user: User;
+  @Prop({ required: true })
+  userId: ObjectId;
 
   @Prop({ required: true, unique: true })
   goal: string;

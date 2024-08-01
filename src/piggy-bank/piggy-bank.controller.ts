@@ -16,7 +16,7 @@ export class PiggyBankController {
     @Body() piggyBank: PiggyBankDto,
     @UserIdExtractedJwt() userId: string,
   ): Promise<PiggyBankDocument> {
-    piggyBank.user = userId;
+    piggyBank.userId = userId;
 
     return this.piggyBankService.createBiggyBank(piggyBank);
   }

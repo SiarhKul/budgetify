@@ -12,5 +12,5 @@ export class PiggyBankDto {
   deposits?: ObjectId[] = [];
 
   @IsOptional()
-  user?: string;
+  userId?: string;
 }
