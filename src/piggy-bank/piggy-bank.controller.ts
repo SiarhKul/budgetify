@@ -19,7 +19,6 @@ import { ObjectId } from 'mongodb';
 export class PiggyBankController {
   constructor(private readonly piggyBankService: PiggyBankService) {}
 
-  //done
   @Post()
   create(
     @Body() piggyBank: PiggyBankDto,
@@ -29,14 +28,14 @@ export class PiggyBankController {
 
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
-  //done
+
   @Post('deposit')
   depositToPiggyBank(
     @Body() deposit: PiggyBankDepositDto,
   ): Promise<PiggyBankDepositDocument> {
     return this.piggyBankService.depositToPiggyBank(deposit);
   }
-  //done
+
   @Get()
   getAllPiggyBanks(
     @Headers('Authorization') tempUserId: string,
@@ -44,7 +43,7 @@ export class PiggyBankController {
     console.log('headers', tempUserId);
     return this.piggyBankService.getAllPiggyBanks(tempUserId);
   }
-  //done
+
   @Put(':id')
   updatePiggyBank(
     @ParamMongoObjectId('id') id: string,
@@ -52,7 +51,7 @@ export class PiggyBankController {
   ): Promise<PiggyBankDocument> {
     return this.piggyBankService.updatePiggyBank(id, piggyBank);
   }
-  //done
+
   @Delete(':id')
   deletePiggyBank(
     @ParamMongoObjectId('id') id: string,
@@ -60,7 +59,7 @@ export class PiggyBankController {
     //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
   }
-  //done
+
   @Get(':id')
   getInfoPiggyBank(@ParamMongoObjectId('id') id: string) {
     return this.piggyBankService.getInfoPiggyBank(id);
