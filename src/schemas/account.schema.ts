@@ -17,6 +17,9 @@ export class Account {
 
   @Prop({ required: true })
   userId: Types.ObjectId;
+
+  @Prop({ required: true, default: 0 })
+  balance: number;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);

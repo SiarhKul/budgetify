@@ -14,4 +14,15 @@ export class AccountService {
   createAccount(account: AccountDto): Promise<AccountDocument> {
     return this.accountModel.create(account);
   }
+  updateAccount(userId: string, account: AccountDto): Promise<AccountDocument> {
+    return this.accountModel.findOneAndUpdate({ userId }, account, {
+      new: true,
+    });
+  }
+  deleteAccount(userId: string): Promise<AccountDocument> {
+    return this.accountModel.findOneAndDelete({ userId });
+  }
+  getAccount(userId: string): Promise<AccountDocument> {
+    return this.accountModel.findOne({ userId });
+  }
 }

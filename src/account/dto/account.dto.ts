@@ -1,4 +1,4 @@
-import { IsEnum, IsMongoId, MinLength } from 'class-validator';
+import { IsEnum, IsMongoId, IsOptional, MinLength } from 'class-validator';
 import { Currency } from '../../ts/account/account.enum';
 
 export class AccountDto {
@@ -11,6 +11,7 @@ export class AccountDto {
   @MinLength(1, { message: 'Description is too short' })
   description: string;
 
+  @IsOptional()
   @IsMongoId()
-  userId: string;
+  userId?: string;
 }
