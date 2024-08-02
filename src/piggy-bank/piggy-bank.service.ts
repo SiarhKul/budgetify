@@ -59,16 +59,6 @@ export class PiggyBankService {
     return piggyBankUpdated;
   }
 
-  async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
-    const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
-
-    if (!findByIdAndDelete) {
-      throw new NotFoundException('No piggy bank found with the given id');
-    }
-
-    return findByIdAndDelete;
-  }
-
   async depositToPiggyBank(
     deposit: PiggyBankDepositDto,
   ): Promise<PiggyBankDepositDocument> {
@@ -117,5 +107,15 @@ export class PiggyBankService {
     }
 
     return piggyBankInfo;
+  }
+
+  async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
+    const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
+
+    if (!findByIdAndDelete) {
+      throw new NotFoundException('No piggy bank found with the given id');
+    }
+
+    return findByIdAndDelete;
   }
 }

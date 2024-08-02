@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AccountDto } from './dto/account.dto';
 import { AccountDocument } from '../schemas/account.schema';
@@ -20,7 +12,7 @@ export class AccountController {
   @Post()
   createAccount(
     @Body() account: AccountDto,
-    @Headers('Authorization') userId: string,
+    @UserId() userId: string,
   ): Promise<AccountDocument> {
     account.userId = userId;
 
@@ -29,7 +21,7 @@ export class AccountController {
 
   @Put()
   updateAccount(
-    @Headers('Authorization') userId: string,
+    @UserId() userId: string,
     @Body() account: AccountDto,
   ): Promise<AccountDocument> {
     return this.accountService.updateAccount(userId, account);
