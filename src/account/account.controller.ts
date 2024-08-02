@@ -1,8 +1,17 @@
-import { Body, Controller, Delete, Headers, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AccountDto } from './dto/account.dto';
 import { AccountDocument } from '../schemas/account.schema';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import { UserId } from '../decorators/UserId';
 
 @Controller('account')
 export class AccountController {
@@ -31,5 +40,10 @@ export class AccountController {
     @ParamMongoObjectId() accountId: string,
   ): Promise<AccountDocument> {
     return this.accountService.deleteAccount(accountId);
+  }
+
+  @Get()
+  getAccounts(@UserId() userId: string): Promise<AccountDocument[]> {
+    return this.accountService.getAccounts(userId);
   }
 }

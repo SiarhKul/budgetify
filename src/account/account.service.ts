@@ -3,6 +3,7 @@ import { AccountDto } from './dto/account.dto';
 import { Account, AccountDocument } from '../schemas/account.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 
 @Injectable()
 export class AccountService {
@@ -22,7 +23,8 @@ export class AccountService {
   deleteAccount(accountId: string): Promise<AccountDocument> {
     return this.accountModel.findOneAndDelete({ _id: accountId });
   }
-  getAccount(userId: string): Promise<AccountDocument> {
-    return this.accountModel.findOne({ userId });
+
+  getAccounts(userId: string) {
+    return this.accountModel.find({ userId });
   }
 }
