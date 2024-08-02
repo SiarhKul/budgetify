@@ -19,8 +19,8 @@ export class AccountService {
       new: true,
     });
   }
-  deleteAccount(userId: string): Promise<AccountDocument> {
-    return this.accountModel.findOneAndDelete({ userId });
+  deleteAccount(accountId: string): Promise<AccountDocument> {
+    return this.accountModel.findOneAndDelete({ _id: accountId });
   }
   getAccount(userId: string): Promise<AccountDocument> {
     return this.accountModel.findOne({ userId });
