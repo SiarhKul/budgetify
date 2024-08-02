@@ -9,5 +9,8 @@ export class PiggyBankDto {
   goalAmount: number;
 
   @IsOptional()
-  deposits: ObjectId[] = [];
+  deposits?: ObjectId[] = [];
+
+  @IsOptional()
+  userId?: string;
 }

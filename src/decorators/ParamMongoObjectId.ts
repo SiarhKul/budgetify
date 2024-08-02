@@ -7,7 +7,7 @@ export const ParamMongoObjectId = createParamDecorator(
     const id = ctx.switchToHttp().getRequest().params.id;
 
     if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Invalid MongoDB ObjectId');
+      throw new BadRequestException('Invalid MongoDB ObjectId format');
     }
     return id;
   },

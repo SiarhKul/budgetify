@@ -32,6 +32,7 @@ export const PiggyBankDepositModel = mongoose.model(
 
 //MISKs
 export const OBJECT_ID_DUMMY = '669e8c31d88d0ec8e0ffc467';
+export const USER_ID_DUMMY = '66aa09697fc697253e201580';
 
 //DTOs
 export const TRANSACTION_DTO_DUMMY: TransactionDto = {

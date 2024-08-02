@@ -38,8 +38,8 @@ export class PiggyBankService {
     return this.piggyBankModel.create(piggyBank);
   }
 
-  async getAllPiggyBanks(): Promise<PiggyBankDocument[]> {
-    return this.piggyBankModel.find().populate('deposits');
+  async getAllPiggyBanks(userId: string): Promise<PiggyBankDocument[]> {
+    return this.piggyBankModel.find({ user: userId }).populate('deposits');
   }
 
   async updatePiggyBank(

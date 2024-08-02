@@ -7,6 +7,7 @@ import {
   PIGGY_BANK_DTO_DUMMY,
   PiggyBankDepositModel,
   PiggyBankModel,
+  USER_ID_DUMMY,
 } from '../../helpers/tests/doubles';
 import { PiggyBankDto } from '../dto/piggy-bank.dto';
 import { ObjectId } from 'mongodb';
@@ -60,8 +61,10 @@ describe('GIVE PiggyBankController', () => {
   });
 
   it('should createBiggyBank returns correct piggy bank document', async () => {
-    const { _id, deposits, goal, goalAmount } =
-      await controller.create(PIGGY_BANK_DTO_DUMMY);
+    const { _id, deposits, goal, goalAmount } = await controller.create(
+      PIGGY_BANK_DTO_DUMMY,
+      USER_ID_DUMMY,
+    );
 
     expect(mockPiggyBankService.createBiggyBank).toHaveBeenCalledWith(
       PIGGY_BANK_DTO_DUMMY,
@@ -87,13 +90,18 @@ describe('GIVE PiggyBankController', () => {
 
   it('should getInfoPiggyBank returns correct piggy bank info', async () => {
     const infoPiggyBank = await controller.getInfoPiggyBank(OBJECT_ID_DUMMY);
-
+    expect(mockPiggyBankService.getInfoPiggyBank).toHaveBeenCalledWith(
+      OBJECT_ID_DUMMY,
+    );
     expect(infoPiggyBank._id).toBe(OBJECT_ID_DUMMY);
   });
 
   it('should getAllPiggyBanks returns correct all piggy banks', async () => {
-    const piggyBanks = await controller.getAllPiggyBanks();
+    const piggyBanks = await controller.getAllPiggyBanks(USER_ID_DUMMY);
 
+    expect(mockPiggyBankService.getAllPiggyBanks).toHaveBeenCalledWith(
+      USER_ID_DUMMY,
+    );
     expect(piggyBanks).toHaveLength(2);
     expect(piggyBanks[0]._id).toBeInstanceOf(ObjectId);
     expect(piggyBanks[1]._id).toBeInstanceOf(ObjectId);

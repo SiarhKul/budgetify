@@ -5,13 +5,19 @@ import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { PiggyBankDepositDocument } from '../schemas/piggy-bank-deposit.schema';
+import { UserId } from '../decorators/UserId';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
   constructor(private readonly piggyBankService: PiggyBankService) {}
 
   @Post()
-  create(@Body() piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
+  create(
+    @Body() piggyBank: PiggyBankDto,
+    @UserId() userId: string,
+  ): Promise<PiggyBankDocument> {
+    piggyBank.userId = userId;
+
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
 
@@ -22,14 +28,9 @@ export class PiggyBankController {
     return this.piggyBankService.depositToPiggyBank(deposit);
   }
 
-  @Get(':id')
-  getInfoPiggyBank(@ParamMongoObjectId('id') id: string) {
-    return this.piggyBankService.getInfoPiggyBank(id);
-  }
-
   @Get()
-  getAllPiggyBanks(): Promise<PiggyBankDocument[]> {
-    return this.piggyBankService.getAllPiggyBanks();
+  getAllPiggyBanks(@UserId() userId: string): Promise<PiggyBankDocument[]> {
+    return this.piggyBankService.getAllPiggyBanks(userId);
   }
 
   @Put(':id')
@@ -46,5 +47,10 @@ export class PiggyBankController {
   ): Promise<PiggyBankDocument> {
     //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
+  }
+
+  @Get(':id')
+  getInfoPiggyBank(@ParamMongoObjectId('id') id: string) {
+    return this.piggyBankService.getInfoPiggyBank(id);
   }
 }
