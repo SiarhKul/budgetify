@@ -13,15 +13,17 @@ import {
 } from '../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { IInfoPiggyBank } from '../ts/piggy-bank/piggy-bank.interfaces';
+import { Account } from '../schemas/account.schema';
 
 @Injectable()
 export class PiggyBankService {
   constructor(
     @InjectModel(PiggyBank.name)
     private piggyBankModel: Model<PiggyBank>,
-
     @InjectModel(PiggyBankDeposit.name)
     private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
+    @InjectModel(Account.name)
+    private readonly accountModel: Model<Account>,
   ) {}
 
   async createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
@@ -38,8 +40,8 @@ export class PiggyBankService {
     return this.piggyBankModel.create(piggyBank);
   }
 
-  async getAllPiggyBanks(userId: string): Promise<PiggyBankDocument[]> {
-    return this.piggyBankModel.find({ user: userId }).populate('deposits');
+  async getAllPiggyBanks(userId: string) {
+    return this.piggyBankModel.find({ userId: userId }).populate('deposits');
   }
 
   async updatePiggyBank(
@@ -110,7 +112,11 @@ export class PiggyBankService {
   }
 
   async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
-    const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
+    const find = await this.accountModel.find();
+    console.log('=>(piggy-bank.service.ts:116) find', find);
+
+    // const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
+    const findByIdAndDelete: any = await this.piggyBankModel.find({ _id: id });
 
     if (!findByIdAndDelete) {
       throw new NotFoundException('No piggy bank found with the given id');

@@ -49,6 +49,7 @@ export const PIGGY_BANK_DTO_DUMMY: PiggyBankDto = {
   deposits: [],
   goal: 'PC',
   goalAmount: 100,
+  accountId: '669e8c31d88d0ec8e0ffc467',
 };
 
 export const PIGGY_BANK_DEPOSIT_DTO_DUMMY: PiggyBankDepositDto = {

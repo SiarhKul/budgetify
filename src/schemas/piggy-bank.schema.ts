@@ -10,6 +10,9 @@ export class PiggyBank {
   @Prop({ required: true })
   userId: ObjectId;
 
+  @Prop({ required: true })
+  accountId: ObjectId;
+
   @Prop({ required: true, unique: true })
   goal: string;
 
