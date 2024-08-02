@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Put,
-  Headers,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { PiggyBankDepositDocument } from '../schemas/piggy-bank-deposit.schema';
-import { ObjectId } from 'mongodb';
+import { UserId } from '../decorators/UserId';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -22,9 +14,9 @@ export class PiggyBankController {
   @Post()
   create(
     @Body() piggyBank: PiggyBankDto,
-    @Headers('Authorization') tempUserId: string,
+    @UserId() userId: string,
   ): Promise<PiggyBankDocument> {
-    piggyBank.user = new ObjectId(tempUserId);
+    piggyBank.userId = userId;
 
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
@@ -37,10 +29,8 @@ export class PiggyBankController {
   }
 
   @Get()
-  getAllPiggyBanks(
-    @Headers('Authorization') tempUserId: string,
-  ): Promise<PiggyBankDocument[]> {
-    return this.piggyBankService.getAllPiggyBanks(tempUserId);
+  getAllPiggyBanks(@UserId() userId: string): Promise<PiggyBankDocument[]> {
+    return this.piggyBankService.getAllPiggyBanks(userId);
   }
 
   @Put(':id')
