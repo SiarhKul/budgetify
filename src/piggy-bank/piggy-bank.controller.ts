@@ -5,7 +5,7 @@ import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { PiggyBankDepositDocument } from '../schemas/piggy-bank-deposit.schema';
-import { UserIdExtractedJwt } from '../decorators/UserIdExtractedJwt';
+import { UserId } from '../decorators/UserId';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -14,7 +14,7 @@ export class PiggyBankController {
   @Post()
   create(
     @Body() piggyBank: PiggyBankDto,
-    @UserIdExtractedJwt() userId: string,
+    @UserId() userId: string,
   ): Promise<PiggyBankDocument> {
     piggyBank.userId = userId;
 
@@ -29,9 +29,7 @@ export class PiggyBankController {
   }
 
   @Get()
-  getAllPiggyBanks(
-    @UserIdExtractedJwt() userId: string,
-  ): Promise<PiggyBankDocument[]> {
+  getAllPiggyBanks(@UserId() userId: string): Promise<PiggyBankDocument[]> {
     return this.piggyBankService.getAllPiggyBanks(userId);
   }
 
