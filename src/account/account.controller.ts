@@ -19,12 +19,12 @@ export class AccountController {
     return this.accountService.createAccount(account);
   }
 
-  @Put()
+  @Put(':id')
   updateAccount(
-    @UserId() userId: string,
+    @ParamMongoObjectId() accountId: string,
     @Body() account: AccountDto,
   ): Promise<AccountDocument> {
-    return this.accountService.updateAccount(userId, account);
+    return this.accountService.updateAccount(accountId, account);
   }
 
   @Delete(':id')

@@ -16,6 +16,7 @@ import {
 } from '../../../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from '../../../piggy-bank/dto/piggy-bank-deposit.dto';
 import { ObjectId } from 'mongodb';
+import { Account, AccountSchema } from '../../../schemas/account.schema';
 
 //MODELs
 export const TransactionModel = mongoose.model(
@@ -29,6 +30,8 @@ export const PiggyBankDepositModel = mongoose.model(
   PiggyBankDeposit.name,
   PiggyBankDepositSchema,
 );
+
+export const AccountModel = mongoose.model(Account.name, AccountSchema);
 
 //MISKs
 export const OBJECT_ID_DUMMY = '669e8c31d88d0ec8e0ffc467';

@@ -16,11 +16,11 @@ export class AccountService {
   }
 
   async updateAccount(
-    userId: string,
+    accountId: string,
     account: AccountDto,
   ): Promise<AccountDocument> {
     const findOneAndUpdate = await this.accountModel.findOneAndUpdate(
-      { userId },
+      { _id: accountId },
       account,
       {
         new: true,
@@ -28,7 +28,9 @@ export class AccountService {
     );
 
     if (!findOneAndUpdate) {
-      throw new NotFoundException('No account found with the given id');
+      throw new NotFoundException(
+        'No account found with the given id due to update',
+      );
     }
 
     return findOneAndUpdate;
