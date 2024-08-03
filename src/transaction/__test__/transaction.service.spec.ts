@@ -9,6 +9,8 @@ import {
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
+import { Account } from '../../schemas/account.schema';
+import { TransactionType } from '../../ts/transactons/transactions.enums';
 
 const mockTransactionModel = {
   findByIdAndDelete: jest.fn(),
@@ -23,6 +25,10 @@ const mockTransactionModel = {
   findByIdAndUpdate: jest.fn(),
 };
 
+const mockAccountModel = {
+  findOneAndUpdate: jest.fn(),
+};
+
 describe('GIVEN TransactionService', () => {
   let service: TransactionService;
 
@@ -34,26 +40,57 @@ describe('GIVEN TransactionService', () => {
           provide: getModelToken(Transaction.name),
           useValue: mockTransactionModel,
         },
+        {
+          provide: getModelToken(Account.name),
+          useValue: mockAccountModel,
+        },
       ],
     }).compile();
 
     service = module.get<TransactionService>(TransactionService);
   });
 
-  it('should create a transaction', async () => {
-    const result = await service.createTransaction(TRANSACTION_DTO_DUMMY);
+  it.each([
+    {
+      balance: TRANSACTION_DTO_DUMMY.amount,
+      dto: TRANSACTION_DTO_DUMMY,
+      testDescription: 'SHOULD increase balance',
+    },
+    {
+      balance: -TRANSACTION_DTO_DUMMY.amount,
+      dto: {
+        ...TRANSACTION_DTO_DUMMY,
+        transactionType: TransactionType.EXPENSES,
+      },
+      testDescription: 'SHOULD decrease balance',
+    },
+  ])('$testDescription', async ({ balance, dto }) => {
+    const result = await service.createTransaction(dto);
 
     expect(result._id).toBeInstanceOf(ObjectId);
+    expect(mockAccountModel.findOneAndUpdate).toHaveBeenCalledWith(
+      {
+        _id: TRANSACTION_DTO_DUMMY.accountId,
+      },
+      {
+        $inc: {
+          balance: balance,
+        },
+      },
+      {
+        new: true,
+      },
+    );
   });
 
-  it('should return list of transactions', async () => {
+  it('SHOULD return list of transactions', async () => {
     const transactions = await service.getAllTransactions();
     expect(transactions.length).toBeGreaterThan(0);
     expect(transactions[0]._id).toBeInstanceOf(ObjectId);
   });
 
   describe('GIVEN TransactionService.deleteTransaction', () => {
-    it('should delete a transaction and return it', async () => {
+    it('SHOULD delete a transaction and return it', async () => {
       const deleteAbleTransaction = { _id: '1' };
       mockTransactionModel.findByIdAndDelete.mockResolvedValue(
         deleteAbleTransaction,
@@ -71,7 +108,7 @@ describe('GIVEN TransactionService', () => {
       );
     });
 
-    it('should throw an error when deleting a non-existing transaction', async () => {
+    it('SHOULD throw an error when deleting a non-existing transaction', async () => {
       mockTransactionModel.findByIdAndDelete.mockResolvedValue(null);
 
       await expect(service.deleteTransaction('1')).rejects.toThrow(
@@ -103,7 +140,7 @@ describe('GIVEN TransactionService', () => {
       );
     });
 
-    it('should throw an error when updating a non-existing transaction', async () => {
+    it('SHOULD throw an error when updating a non-existing transaction', async () => {
       mockTransactionModel.findByIdAndUpdate.mockResolvedValue(null);
 
       await expect(

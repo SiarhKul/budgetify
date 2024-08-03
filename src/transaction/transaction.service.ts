@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Transaction } from '../schemas/transaction.schema';
+import {
+  Transaction,
+  TransactionDocument,
+} from '../schemas/transaction.schema';
 import { Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
@@ -16,7 +19,9 @@ export class TransactionService {
     private readonly accountModel: Model<Account>,
   ) {}
 
-  async createTransaction(transaction: TransactionDto) {
+  async createTransaction(
+    transaction: TransactionDto,
+  ): Promise<TransactionDocument> {
     const amount =
       transaction.transactionType === TransactionType.INCOME
         ? transaction.amount
@@ -37,10 +42,6 @@ export class TransactionService {
     );
 
     return this.transactionModel.create(transaction);
-  }
-
-  private createIncomeTransaction(transaction: TransactionDto) {
-    console.log(transaction.accountId, 'accountIdIncome');
   }
 
   async getAllTransactions() {
