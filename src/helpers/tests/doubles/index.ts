@@ -48,6 +48,7 @@ export const TRANSACTION_DTO_DUMMY: TransactionDto = {
   paymentDate: new Date(),
   payee: 'Jon Doe',
   description: 'dummy description',
+  accountId: ACCOUNT_ID_DUMMY,
 };
 
 export const PIGGY_BANK_DTO_DUMMY: PiggyBankDto = {
