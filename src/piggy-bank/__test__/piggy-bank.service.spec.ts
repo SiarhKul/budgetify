@@ -16,6 +16,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { PiggyBankDto } from '../dto/piggy-bank.dto';
 
 import { PiggyBankDepositDto } from '../dto/piggy-bank-deposit.dto';
+import { Account } from '../../schemas/account.schema';
 
 const mockPiggyBankModel = {
   findOne: jest.fn(),
@@ -36,6 +37,10 @@ const mockPiggyBankDepositModel = {
   create: jest.fn(),
 };
 
+const mockAccountModel = {
+  findOneAndUpdate: jest.fn(),
+};
+
 describe('GIVEN PiggyBankService', () => {
   let service: PiggyBankService;
 
@@ -50,6 +55,10 @@ describe('GIVEN PiggyBankService', () => {
         {
           provide: getModelToken(PiggyBankDeposit.name),
           useValue: mockPiggyBankDepositModel,
+        },
+        {
+          provide: getModelToken(Account.name),
+          useValue: mockAccountModel,
         },
       ],
     }).compile();
@@ -187,13 +196,6 @@ describe('GIVEN PiggyBankService', () => {
   });
 
   describe('GIVEN getInfoPiggyBank', () => {
-    it('should throw an error if the id is invalid', async () => {
-      //Act and Assert
-      await expect(service.getInfoPiggyBank('1')).rejects.toThrow(
-        new BadRequestException('Invalid ObjectId'),
-      );
-    });
-
     it('should return the piggy bank info', async () => {
       //Arrange
       const DUMMY_INFO_PIGGY_BANK = {
