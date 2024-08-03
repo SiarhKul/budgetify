@@ -78,10 +78,6 @@ export class PiggyBankService {
   }
 
   async getInfoPiggyBank(id: string): Promise<IInfoPiggyBank> {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Invalid ObjectId');
-    }
-
     const [piggyBankInfo] = await this.piggyBankModel.aggregate([
       { $match: { _id: new Types.ObjectId(id) } },
       { $unwind: '$deposits' },
@@ -112,16 +108,24 @@ export class PiggyBankService {
   }
 
   async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
-    const find = await this.accountModel.find();
-    console.log('=>(piggy-bank.service.ts:116) find', find);
+    const deletedPiggyBank = await this.piggyBankModel.findByIdAndDelete(id);
 
-    // const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
-    const findByIdAndDelete: any = await this.piggyBankModel.find({ _id: id });
-
-    if (!findByIdAndDelete) {
+    if (!deletedPiggyBank) {
       throw new NotFoundException('No piggy bank found with the given id');
     }
 
-    return findByIdAndDelete;
+    const sumDeposits: number = deletedPiggyBank.deposits.reduce(
+      (balance: number, d) => balance + d.amountToSave,
+      0,
+    );
+
+    await this.accountModel.findOneAndUpdate(
+      {
+        _id: deletedPiggyBank.accountId,
+      },
+      { balance: sumDeposits },
+    );
+
+    return deletedPiggyBank;
   }
 }
