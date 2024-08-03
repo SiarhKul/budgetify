@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PiggyBankService } from '../piggy-bank.service';
 import { PiggyBankDeposit } from '../../schemas/piggy-bank-deposit.schema';
 import {
+  ACCOUNT_ID_DUMMY,
   OBJECT_ID_DUMMY,
   PIGGY_BANK_DEPOSIT_DTO_DUMMY,
   PIGGY_BANK_DTO_DUMMY,
+  PIGGY_BANK_ID_DUMMY,
   PiggyBankDepositModel,
   PiggyBankModel,
   USER_ID_DUMMY,
@@ -144,17 +146,36 @@ describe('GIVEN PiggyBankService', () => {
   describe('GIVEN deletePiggyBank', () => {
     it('should deletePiggyBank delete piggy bank by an Id', async () => {
       //Arrange
-      mockPiggyBankModel.findByIdAndDelete.mockImplementation((id) => {
-        const piggyBankModel = new PiggyBankModel(PIGGY_BANK_DTO_DUMMY);
-        piggyBankModel._id = id;
-        return Promise.resolve(piggyBankModel);
+      mockPiggyBankModel.findByIdAndDelete.mockResolvedValue({
+        _id: OBJECT_ID_DUMMY,
+        userId: USER_ID_DUMMY,
+        accountId: ACCOUNT_ID_DUMMY,
+        goal: '789',
+        goalAmount: 876,
+        deposits: [
+          new PiggyBankDepositModel({
+            piggyBankId: PIGGY_BANK_ID_DUMMY,
+            amountToSave: 1,
+            date: new Date(),
+          }),
+          new PiggyBankDepositModel({
+            piggyBankId: PIGGY_BANK_ID_DUMMY,
+            amountToSave: 2,
+            date: new Date(),
+          }),
+        ],
       });
-
       //Act
-      const piggyBank = await service.deletePiggyBank(OBJECT_ID_DUMMY);
+      const deletedPiggyBank = await service.deletePiggyBank(OBJECT_ID_DUMMY);
 
       //Assert
-      expect(piggyBank._id.toString()).toBe(OBJECT_ID_DUMMY.toString());
+      expect(deletedPiggyBank._id.toString()).toBe(OBJECT_ID_DUMMY.toString());
+      expect(mockAccountModel.findOneAndUpdate).toHaveBeenCalledWith(
+        {
+          _id: deletedPiggyBank.accountId,
+        },
+        { balance: 3 },
+      );
     });
 
     it('should deletePiggyBank throw the exception', () => {

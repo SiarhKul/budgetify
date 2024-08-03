@@ -33,6 +33,8 @@ export const PiggyBankDepositModel = mongoose.model(
 //MISKs
 export const OBJECT_ID_DUMMY = '669e8c31d88d0ec8e0ffc467';
 export const USER_ID_DUMMY = '66aa09697fc697253e201580';
+export const ACCOUNT_ID_DUMMY = '66abf6a97bf3e2f09f4f843b';
+export const PIGGY_BANK_ID_DUMMY = '66ad4347db1f470fda343959';
 
 //DTOs
 export const TRANSACTION_DTO_DUMMY: TransactionDto = {
@@ -49,7 +51,7 @@ export const PIGGY_BANK_DTO_DUMMY: PiggyBankDto = {
   deposits: [],
   goal: 'PC',
   goalAmount: 100,
-  accountId: '669e8c31d88d0ec8e0ffc467',
+  accountId: '669e8c31d88d0ec8e0ffc411',
 };
 
 export const PIGGY_BANK_DEPOSIT_DTO_DUMMY: PiggyBankDepositDto = {
