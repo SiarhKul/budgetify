@@ -19,6 +19,7 @@ import { ObjectId } from 'mongodb';
 import { Account, AccountSchema } from '../../../schemas/account.schema';
 import {
   Subscription,
+  SubscriptionDocument,
   SubscriptionSchema,
 } from '../../../schemas/subscription.schema';
 import { UpdateSubscriptionDto } from '../../../subscription/dto/update-subscription.dto';
@@ -74,6 +75,7 @@ export const PIGGY_BANK_DEPOSIT_DTO_DUMMY: PiggyBankDepositDto = {
   date: new Date(),
   piggyBankId: new ObjectId(OBJECT_ID_DUMMY),
 };
+
 export const SUBSCRIPTION_DTO_DUMMY: CreateSubscriptionDto = {
   title: 'some title',
   categories: Categories.NETFLIX,
@@ -82,3 +84,7 @@ export const SUBSCRIPTION_DTO_DUMMY: CreateSubscriptionDto = {
   description: 'description2',
   accountId: ACCOUNT_ID_DUMMY,
 };
+
+//DOCUMENTS
+export const SUBSCRIPTION_DOCUMENT_DUMMY: SubscriptionDocument =
+  new SubscriptionsModel(SUBSCRIPTION_DTO_DUMMY);
