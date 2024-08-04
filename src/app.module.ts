@@ -14,6 +14,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
     AccountModule,
     TransactionModule,
     PiggyBankModule,
+    SubscriptionModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
@@ -25,7 +26,6 @@ import { SubscriptionModule } from './subscription/subscription.module';
       useFactory: async (configService: ConfigService) =>
         useFactoryReturn(configService),
     }),
-    SubscriptionModule,
   ],
   providers: [
     {

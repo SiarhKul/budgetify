@@ -7,33 +7,22 @@ import {
   SubscriptionDocument,
 } from '../schemas/subscription.schema';
 import { Model } from 'mongoose';
-import { Account } from '../schemas/account.schema';
+import { AccountService } from '../account/account.service';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
     @InjectModel(Subscription.name)
-    private subscriptionModel: Model<SubscriptionDocument>,
+    private readonly subscriptionModel: Model<SubscriptionDocument>,
 
-    @InjectModel(Account.name)
-    private readonly accountModel: Model<Account>,
+    private readonly accountService: AccountService,
   ) {}
 
   async create(createSubscriptionDto: CreateSubscriptionDto) {
-    await this.accountModel.findOneAndUpdate(
-      {
-        _id: createSubscriptionDto.accountId,
-      },
-      {
-        $inc: {
-          balance: -createSubscriptionDto.amount,
-        },
-      },
-      {
-        new: true,
-      },
+    await this.accountService.subtractOrSumBalance(
+      createSubscriptionDto.accountId,
+      -createSubscriptionDto.amount,
     );
-
     return this.subscriptionModel.create(createSubscriptionDto);
   }
 

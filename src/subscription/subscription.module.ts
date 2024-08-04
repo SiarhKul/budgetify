@@ -7,6 +7,7 @@ import {
   SubscriptionSchema,
 } from '../schemas/subscription.schema';
 import { Account, AccountSchema } from '../schemas/account.schema';
+import { AccountService } from '../account/account.service'; // import AccountModule
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { Account, AccountSchema } from '../schemas/account.schema';
     ]),
   ],
   controllers: [SubscriptionController],
-  providers: [SubscriptionService],
+  providers: [SubscriptionService, AccountService],
 })
 export class SubscriptionModule {}

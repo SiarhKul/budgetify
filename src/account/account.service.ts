@@ -51,4 +51,20 @@ export class AccountService {
   async getAccounts(userId: string) {
     return this.accountModel.find({ userId });
   }
+
+  subtractOrSumBalance(accountId: string, amount: number) {
+    return this.accountModel.findOneAndUpdate(
+      {
+        _id: accountId,
+      },
+      {
+        $inc: {
+          balance: amount,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+  }
 }
