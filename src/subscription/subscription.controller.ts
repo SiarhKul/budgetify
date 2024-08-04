@@ -20,11 +20,6 @@ export class SubscriptionController {
     return this.subscriptionService.create(createSubscriptionDto);
   }
 
-  @Get()
-  findAll() {
-    return this.subscriptionService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.subscriptionService.findOne(+id);

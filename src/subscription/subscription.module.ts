@@ -6,6 +6,7 @@ import {
   Subscription,
   SubscriptionSchema,
 } from '../schemas/subscription.schema';
+import { Account, AccountSchema } from '../schemas/account.schema';
 
 @Module({
   imports: [
@@ -13,6 +14,10 @@ import {
       {
         name: Subscription.name,
         schema: SubscriptionSchema,
+      },
+      {
+        name: Account.name,
+        schema: AccountSchema,
       },
     ]),
   ],

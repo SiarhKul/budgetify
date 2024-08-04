@@ -2,24 +2,39 @@ import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Subscription } from '../schemas/subscription.schema';
+import {
+  Subscription,
+  SubscriptionDocument,
+} from '../schemas/subscription.schema';
 import { Model } from 'mongoose';
-
-class SubscriptionDocument {}
+import { Account } from '../schemas/account.schema';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
     @InjectModel(Subscription.name)
     private subscriptionModel: Model<SubscriptionDocument>,
+
+    @InjectModel(Account.name)
+    private readonly accountModel: Model<Account>,
   ) {}
 
   async create(createSubscriptionDto: CreateSubscriptionDto) {
-    return this.subscriptionModel.create(createSubscriptionDto);
-  }
+    await this.accountModel.findOneAndUpdate(
+      {
+        _id: createSubscriptionDto.accountId,
+      },
+      {
+        $inc: {
+          balance: -createSubscriptionDto.amount,
+        },
+      },
+      {
+        new: true,
+      },
+    );
 
-  findAll() {
-    return `This action returns all subscription`;
+    return this.subscriptionModel.create(createSubscriptionDto);
   }
 
   findOne(id: number) {
