@@ -10,6 +10,7 @@ import {
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 
 @Controller('subscription')
 export class SubscriptionController {
@@ -21,8 +22,8 @@ export class SubscriptionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subscriptionService.findOne(+id);
+  findOne(@ParamMongoObjectId() id: string) {
+    return this.subscriptionService.findOne(id);
   }
 
   @Patch(':id')

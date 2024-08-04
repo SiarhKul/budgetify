@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -26,8 +26,14 @@ export class SubscriptionService {
     return this.subscriptionModel.create(createSubscriptionDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscription`;
+  async findOne(id: string) {
+    const subscription = await this.subscriptionModel.findById(id);
+
+    if (!subscription) {
+      throw new NotFoundException('No subscription found with the given id');
+    }
+
+    return subscription;
   }
 
   update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
