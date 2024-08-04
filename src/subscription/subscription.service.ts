@@ -36,11 +36,18 @@ export class SubscriptionService {
     return subscription;
   }
 
-  update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
-    return `This action updates a #${id} subscription`;
+  async remove(id: string) {
+    const deletedSubscription =
+      await this.subscriptionModel.findByIdAndDelete(id);
+
+    if (!deletedSubscription) {
+      throw new NotFoundException('No subscription found with the given id');
+    }
+
+    return deletedSubscription;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subscription`;
+  update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
+    return `This action updates a #${id} subscription`;
   }
 }

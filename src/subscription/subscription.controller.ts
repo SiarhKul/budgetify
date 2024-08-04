@@ -26,16 +26,16 @@ export class SubscriptionController {
     return this.subscriptionService.findOne(id);
   }
 
+  @Delete(':id')
+  remove(@ParamMongoObjectId() id: string) {
+    return this.subscriptionService.remove(id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateSubscriptionDto: UpdateSubscriptionDto,
   ) {
     return this.subscriptionService.update(+id, updateSubscriptionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subscriptionService.remove(+id);
   }
 }
