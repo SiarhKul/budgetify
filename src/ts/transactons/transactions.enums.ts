@@ -8,4 +8,5 @@ export enum Categories {
   SALARY = 'Salary',
   DEBT = 'Debt',
   NETFLIX = 'Netflix',
+  DISNEY = 'Disney',
 }
