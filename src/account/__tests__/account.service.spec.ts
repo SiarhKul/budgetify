@@ -75,11 +75,11 @@ describe('GIVEN AccountService', () => {
       );
 
       //Act
-      const result = await service.updateAccount(USER_ID_DUMMY, ACCOUNT_DTO);
+      const result = await service.updateAccount(ACCOUNT_ID_DUMMY, ACCOUNT_DTO);
 
       //Assert
       expect(mockAccountModel.findOneAndUpdate).toHaveBeenCalledWith(
-        { userId: USER_ID_DUMMY },
+        { _id: ACCOUNT_ID_DUMMY },
         ACCOUNT_DTO,
         { new: true },
       );
