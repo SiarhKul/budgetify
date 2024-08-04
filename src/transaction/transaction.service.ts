@@ -8,6 +8,7 @@ import { Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { Account } from '../schemas/account.schema';
+import { AccountService } from '../account/account.service';
 
 @Injectable()
 export class TransactionService {
@@ -17,28 +18,22 @@ export class TransactionService {
 
     @InjectModel(Account.name)
     private readonly accountModel: Model<Account>,
+
+    private readonly accountService: AccountService,
   ) {}
 
   async createTransaction(
     transaction: TransactionDto,
   ): Promise<TransactionDocument> {
+    //todo use subtractOrSumBalance method from accountService
     const amount =
       transaction.transactionType === TransactionType.INCOME
         ? transaction.amount
         : -transaction.amount;
 
-    await this.accountModel.findOneAndUpdate(
-      {
-        _id: transaction.accountId,
-      },
-      {
-        $inc: {
-          balance: amount,
-        },
-      },
-      {
-        new: true,
-      },
+    await this.accountService.subtractOrSumBalance(
+      transaction.accountId,
+      amount,
     );
 
     return this.transactionModel.create(transaction);
