@@ -8,6 +8,8 @@ import properties from '../config/config.parameters';
 import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
 import { AccountModule } from './account/account.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
       useFactory: async (configService: ConfigService) =>
         useFactoryReturn(configService),
     }),
+    AuthModule,
+    UsersModule,
   ],
   providers: [
     {
