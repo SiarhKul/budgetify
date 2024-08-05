@@ -59,7 +59,7 @@ describe('SubscriptionService', () => {
     );
   });
 
-  describe('GIVEN SubscriptionService', () => {
+  describe('GIVEN SubscriptionService.findOne', () => {
     it('finds a subscription by id', async () => {
       //Arrange
       mockSubscriptionModel.findById.mockReturnValue(
@@ -80,14 +80,46 @@ describe('SubscriptionService', () => {
       //Arrange
       mockSubscriptionModel.findById.mockReturnValue(null);
 
-      //Act
+      //Act and Assert
       await expect(
         subscriptionService.findOne(SUBSCRIPTION_ID_DUMMY),
       ).rejects.toThrow(NotFoundException);
     });
   });
 
-  it('removes a subscription by id', async () => {});
+  it('removes a subscription by id', async () => {
+    //Arrange
+    mockSubscriptionModel.findByIdAndDelete.mockReturnValue(
+      SUBSCRIPTION_DOCUMENT_DUMMY,
+    );
 
-  it('updates a subscription', async () => {});
+    //Act
+    const result = await subscriptionService.remove(SUBSCRIPTION_ID_DUMMY);
+
+    //Assert
+    expect(mockSubscriptionModel.findByIdAndDelete).toHaveBeenCalledWith(
+      SUBSCRIPTION_ID_DUMMY,
+    );
+    expect(result._id).toBeInstanceOf(ObjectId);
+  });
+
+  it('updates a subscription', async () => {
+    //Arrange
+    mockSubscriptionModel.findByIdAndUpdate.mockResolvedValueOnce(
+      SUBSCRIPTION_DOCUMENT_DUMMY,
+    );
+
+    //Act
+    const result = await subscriptionService.update(
+      SUBSCRIPTION_ID_DUMMY,
+      SUBSCRIPTION_DTO_DUMMY,
+    );
+    //Assert
+    expect(result._id).toBeInstanceOf(ObjectId);
+    expect(mockSubscriptionModel.findByIdAndUpdate).toHaveBeenCalledWith(
+      SUBSCRIPTION_ID_DUMMY,
+      SUBSCRIPTION_DTO_DUMMY,
+      { new: true },
+    );
+  });
 });

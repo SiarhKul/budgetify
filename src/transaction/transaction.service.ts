@@ -25,7 +25,6 @@ export class TransactionService {
   async createTransaction(
     transaction: TransactionDto,
   ): Promise<TransactionDocument> {
-    //todo use subtractOrSumBalance method from accountService
     const amount =
       transaction.transactionType === TransactionType.INCOME
         ? transaction.amount
