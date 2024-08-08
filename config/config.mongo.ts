@@ -14,8 +14,7 @@ export const useFactoryReturn = (
 
   logger.log(`MongoDB connection string: ${maskedUri}`);
 
-  //todo: restore {uri}
   return {
-    uri:'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses'
+    uri,
   };
 };

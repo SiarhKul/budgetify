@@ -1,10 +1,16 @@
-import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+//todo inject userService instead of userModel
 
 @Injectable()
 export class AuthService {
@@ -12,11 +18,9 @@ export class AuthService {
 
   constructor(
     @InjectModel(User.name)
-    //todo inject userService instead of userModel
     private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) {
-  }
+  ) {}
 
   async signUp(authDto: AuthDto) {
     const saltOrRounds = 2;
@@ -32,14 +36,16 @@ export class AuthService {
   }
 
   async sighIn(email: string, pass: string): Promise<{ accessToken: string }> {
-    const user: UserDocument | null = await this.userModel.findOne({ email: email });
+    const user: UserDocument | null = await this.userModel.findOne({
+      email: email,
+    });
 
     if (!user) {
       throw new NotFoundException('Such user not found');
     }
 
-    const isMatch = await bcrypt.compare( pass, user.password);
-    this.logger.log(`User with ${user.email} has been registered`)
+    const isMatch = await bcrypt.compare(pass, user.password);
+    this.logger.log(`User with ${user.email} has been registered`);
 
     if (!isMatch) {
       throw new UnauthorizedException('Email or password not found');
@@ -52,6 +58,5 @@ export class AuthService {
     return {
       accessToken,
     };
-
   }
 }
