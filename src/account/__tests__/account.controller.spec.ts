@@ -12,11 +12,12 @@ const ACCOUNT_DTO_DUMMY: AccountDto = {
   userId: USER_ID_DUMMY,
 };
 
-const mockAccountService = {
+const mockAccountService: Partial<AccountService> = {
   createAccount: jest.fn(),
   updateAccount: jest.fn(),
   deleteAccount: jest.fn(),
-  getAccounts: jest.fn(),
+  getAccountIds: jest.fn(),
+  getAccountById: jest.fn(),
 };
 
 describe('GIVEN AccountController', () => {
@@ -69,9 +70,20 @@ describe('GIVEN AccountController', () => {
 
   it('SHOULD get all accounts', async () => {
     // Act
-    await accountController.getAccounts(USER_ID_DUMMY);
+    await accountController.getAccountIds(USER_ID_DUMMY);
 
     // Assert
-    expect(mockAccountService.getAccounts).toHaveBeenCalledWith(USER_ID_DUMMY);
+    expect(mockAccountService.getAccountIds).toHaveBeenCalledWith(
+      USER_ID_DUMMY,
+    );
+  });
+
+  it('should get account by Id', async () => {
+    //Act
+    await accountController.getAccountById(ACCOUNT_ID_DUMMY);
+
+    expect(mockAccountService.getAccountById).toHaveBeenCalledWith(
+      ACCOUNT_ID_DUMMY,
+    );
   });
 });

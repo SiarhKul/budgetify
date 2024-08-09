@@ -48,7 +48,11 @@ export class AccountService {
     return findOneAndDelete;
   }
 
-  async getAccounts(userId: string) {
-    return this.accountModel.find({ userId });
+  async getAccountIds(userId: string) {
+    return this.accountModel.find({ userId }, '_id');
+  }
+
+  async getAccountById(accountId: string) {
+    return this.accountModel.findById(accountId);
   }
 }

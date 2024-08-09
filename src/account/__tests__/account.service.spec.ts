@@ -24,6 +24,7 @@ const mockAccountModel = {
   findOneAndUpdate: jest.fn(),
   findOneAndDelete: jest.fn(),
   find: jest.fn(),
+  findById: jest.fn(),
 };
 
 describe('GIVEN AccountService', () => {
@@ -125,12 +126,27 @@ describe('GIVEN AccountService', () => {
     //Arrange
     mockAccountModel.find.mockResolvedValue([ACCOUNT_DTO]);
     //Act
-    const result = await service.getAccounts(USER_ID_DUMMY);
+    const result = await service.getAccountIds(USER_ID_DUMMY);
 
     //Assert
     expect(result).toEqual([ACCOUNT_DTO]);
-    expect(mockAccountModel.find).toHaveBeenCalledWith({
-      userId: USER_ID_DUMMY,
-    });
+    expect(mockAccountModel.find).toHaveBeenCalledWith(
+      {
+        userId: USER_ID_DUMMY,
+      },
+      '_id',
+    );
+  });
+
+  it('should find account by Id', async () => {
+    //Arrange
+    mockAccountModel.findById.mockResolvedValue(new AccountModel(ACCOUNT_DTO));
+
+    //Act
+    const result = await mockAccountModel.findById(ACCOUNT_ID_DUMMY);
+
+    //Assert
+    expect(mockAccountModel.findById).toHaveBeenCalledWith(ACCOUNT_ID_DUMMY);
+    expect(result._id).toBeInstanceOf(ObjectId);
   });
 });
