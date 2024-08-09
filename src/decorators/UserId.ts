@@ -11,9 +11,6 @@ const jwtService = new JwtService();
 export const UserId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): string => {
     const request = ctx.switchToHttp().getRequest();
-
-    console.log();
-
     const [type, token] = request.headers['authorization'].split(' ') ?? [];
     const { sub: userId } = jwtService.decode(token);
 

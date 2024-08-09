@@ -5,14 +5,14 @@ import {
   Get,
   Post,
   Put,
-  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AccountDto } from './dto/account.dto';
 import { AccountDocument } from '../schemas/account.schema';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { UserId } from '../decorators/UserId';
-import { AuthGuard } from '../auth/auth.guard';
+import { IRequest } from '../ts/auth/auth.interfaces';
 
 @Controller('account')
 export class AccountController {
@@ -43,9 +43,9 @@ export class AccountController {
     return this.accountService.deleteAccount(accountId);
   }
 
-  @UseGuards(AuthGuard)
   @Get()
-  getAccounts(@UserId() userId: string): Promise<AccountDocument[]> {
+  getAccounts(@Request() req: IRequest): Promise<AccountDocument[]> {
+    const userId = req.user.sub;
     return this.accountService.getAccounts(userId);
   }
 }

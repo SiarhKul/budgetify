@@ -1,0 +1,5 @@
+import { JwtPayload } from 'jsonwebtoken';
+
+export interface IRequest extends Request {
+  user: JwtPayload;
+}
