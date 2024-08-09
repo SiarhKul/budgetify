@@ -1,20 +1,20 @@
 import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { AccountService } from './account.service';
-import { AccountDto } from './dto/account.dto';
-import { AccountDocument } from '../schemas/account.schema';
+import { MoneyAccountService } from './money-account.service';
+import { MoneyAccountDto } from './dto/money-account.dto';
+import { MoneyAccountDocument } from '../schemas/money-account.schema';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { UserId } from '../decorators/UserId';
 import { ObjectId } from 'mongodb';
 
-@Controller('account')
+@Controller('money-account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(private readonly accountService: MoneyAccountService) {}
 
   @Post()
   createAccount(
-    @Body() account: AccountDto,
+    @Body() account: MoneyAccountDto,
     @UserId() userId: string,
-  ): Promise<AccountDocument> {
+  ): Promise<MoneyAccountDocument> {
     account.userId = userId;
 
     return this.accountService.createAccount(account);
@@ -23,18 +23,19 @@ export class AccountController {
   @Put(':id')
   updateAccount(
     @ParamMongoObjectId() accountId: string,
-    @Body() account: AccountDto,
-  ): Promise<AccountDocument> {
+    @Body() account: MoneyAccountDto,
+  ): Promise<MoneyAccountDocument> {
     return this.accountService.updateAccount(accountId, account);
   }
 
   @Delete(':id')
   deleteAccount(
     @ParamMongoObjectId() accountId: string,
-  ): Promise<AccountDocument> {
+  ): Promise<MoneyAccountDocument> {
     return this.accountService.deleteAccount(accountId);
   }
 
+  //todo: extract userId from @Request after implementation auth
   @Get()
   getAccountIds(@UserId() userId: string): Promise<ObjectId[]> {
     return this.accountService.getAccountIds(userId);
@@ -43,7 +44,7 @@ export class AccountController {
   @Get(':id')
   getAccountById(
     @ParamMongoObjectId() accountId: string,
-  ): Promise<AccountDocument> {
+  ): Promise<MoneyAccountDocument> {
     return this.accountService.getAccountById(accountId);
   }
 }

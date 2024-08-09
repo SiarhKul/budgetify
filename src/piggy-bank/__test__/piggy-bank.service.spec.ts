@@ -18,7 +18,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { PiggyBankDto } from '../dto/piggy-bank.dto';
 
 import { PiggyBankDepositDto } from '../dto/piggy-bank-deposit.dto';
-import { Account } from '../../schemas/account.schema';
+import { MoneyAccount } from '../../schemas/money-account.schema';
 
 const mockPiggyBankModel = {
   findOne: jest.fn(),
@@ -59,7 +59,7 @@ describe('GIVEN PiggyBankService', () => {
           useValue: mockPiggyBankDepositModel,
         },
         {
-          provide: getModelToken(Account.name),
+          provide: getModelToken(MoneyAccount.name),
           useValue: mockAccountModel,
         },
       ],

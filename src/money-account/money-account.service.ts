@@ -1,25 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AccountDto } from './dto/account.dto';
-import { Account, AccountDocument } from '../schemas/account.schema';
+import { MoneyAccountDto } from './dto/money-account.dto';
+import {
+  MoneyAccount,
+  MoneyAccountDocument,
+} from '../schemas/money-account.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
-export class AccountService {
+export class MoneyAccountService {
   constructor(
-    @InjectModel(Account.name)
-    private readonly accountModel: Model<Account>,
+    @InjectModel(MoneyAccount.name)
+    private readonly accountModel: Model<MoneyAccount>,
   ) {}
 
-  createAccount(account: AccountDto): Promise<AccountDocument> {
+  createAccount(account: MoneyAccountDto): Promise<MoneyAccountDocument> {
     return this.accountModel.create(account);
   }
 
   async updateAccount(
     accountId: string,
-    account: AccountDto,
-  ): Promise<AccountDocument> {
+    account: MoneyAccountDto,
+  ): Promise<MoneyAccountDocument> {
     const findOneAndUpdate = await this.accountModel.findOneAndUpdate(
       { _id: accountId },
       account,
@@ -30,20 +33,20 @@ export class AccountService {
 
     if (!findOneAndUpdate) {
       throw new NotFoundException(
-        'No account found with the given id due to update',
+        'No money-account found with the given id due to update',
       );
     }
 
     return findOneAndUpdate;
   }
 
-  async deleteAccount(accountId: string): Promise<AccountDocument> {
+  async deleteAccount(accountId: string): Promise<MoneyAccountDocument> {
     const findOneAndDelete = await this.accountModel.findOneAndDelete({
       _id: accountId,
     });
 
     if (!findOneAndDelete) {
-      throw new NotFoundException('No account found with the given id');
+      throw new NotFoundException('No money-account found with the given id');
     }
 
     return findOneAndDelete;
@@ -53,7 +56,7 @@ export class AccountService {
     return this.accountModel.find({ userId }, '_id');
   }
 
-  async getAccountById(accountId: string): Promise<AccountDocument> {
+  async getAccountById(accountId: string): Promise<MoneyAccountDocument> {
     return this.accountModel.findById(accountId);
   }
 }

@@ -13,7 +13,7 @@ import {
 } from '../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { IInfoPiggyBank } from '../ts/piggy-bank/piggy-bank.interfaces';
-import { Account } from '../schemas/account.schema';
+import { MoneyAccount } from '../schemas/money-account.schema';
 
 @Injectable()
 export class PiggyBankService {
@@ -22,8 +22,8 @@ export class PiggyBankService {
     private piggyBankModel: Model<PiggyBank>,
     @InjectModel(PiggyBankDeposit.name)
     private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
-    @InjectModel(Account.name)
-    private readonly accountModel: Model<Account>,
+    @InjectModel(MoneyAccount.name)
+    private readonly accountModel: Model<MoneyAccount>,
   ) {}
 
   async createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {

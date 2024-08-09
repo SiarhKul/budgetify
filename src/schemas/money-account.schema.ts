@@ -3,10 +3,10 @@ import { HydratedDocument } from 'mongoose';
 import { Currency } from '../ts/account/account.enum';
 import { ObjectId } from 'mongodb';
 
-export type AccountDocument = HydratedDocument<Account>;
+export type MoneyAccountDocument = HydratedDocument<MoneyAccount>;
 
 @Schema()
-export class Account {
+export class MoneyAccount {
   @Prop({ required: true })
   userId: ObjectId;
 
@@ -23,4 +23,4 @@ export class Account {
   balance: number;
 }
 
-export const AccountSchema = SchemaFactory.createForClass(Account);
+export const MoneyAccountSchema = SchemaFactory.createForClass(MoneyAccount);

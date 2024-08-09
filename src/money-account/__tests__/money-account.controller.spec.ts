@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountController } from '../account.controller';
-import { AccountService } from '../account.service';
-import { AccountDto } from '../dto/account.dto';
+import { AccountController } from '../money-account.controller';
+import { MoneyAccountService } from '../money-account.service';
+import { MoneyAccountDto } from '../dto/money-account.dto';
 import { Currency } from '../../ts/account/account.enum';
 import { ACCOUNT_ID_DUMMY, USER_ID_DUMMY } from '../../helpers/tests/doubles';
 
-const ACCOUNT_DTO_DUMMY: AccountDto = {
+const ACCOUNT_DTO_DUMMY: MoneyAccountDto = {
   title: 'Test Account',
-  description: 'This is a test account',
+  description: 'This is a test money-account',
   currency: Currency.EUR,
   userId: USER_ID_DUMMY,
 };
 
-const mockAccountService: Partial<AccountService> = {
+const mockAccountService: Partial<MoneyAccountService> = {
   createAccount: jest.fn(),
   updateAccount: jest.fn(),
   deleteAccount: jest.fn(),
@@ -28,7 +28,7 @@ describe('GIVEN AccountController', () => {
       controllers: [AccountController],
       providers: [
         {
-          provide: AccountService,
+          provide: MoneyAccountService,
           useValue: mockAccountService,
         },
       ],
@@ -37,7 +37,7 @@ describe('GIVEN AccountController', () => {
     accountController = module.get<AccountController>(AccountController);
   });
 
-  it('SHOULD create an account', async () => {
+  it('SHOULD create an money-account', async () => {
     // Act
     await accountController.createAccount(ACCOUNT_DTO_DUMMY, USER_ID_DUMMY);
 
@@ -47,7 +47,7 @@ describe('GIVEN AccountController', () => {
     );
   });
 
-  it('SHOULD update an account', async () => {
+  it('SHOULD update an money-account', async () => {
     //Act
     await accountController.updateAccount(USER_ID_DUMMY, ACCOUNT_DTO_DUMMY);
 
@@ -58,7 +58,7 @@ describe('GIVEN AccountController', () => {
     );
   });
 
-  it('SHOULD delete an account', async () => {
+  it('SHOULD delete an money-account', async () => {
     // Act
     await accountController.deleteAccount(ACCOUNT_ID_DUMMY);
 
@@ -78,7 +78,7 @@ describe('GIVEN AccountController', () => {
     );
   });
 
-  it('should get account by Id', async () => {
+  it('should get money-account by Id', async () => {
     //Act
     await accountController.getAccountById(ACCOUNT_ID_DUMMY);
 
