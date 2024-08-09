@@ -5,4 +5,6 @@ export enum TransactionType {
 export enum Categories {
   HOME = 'Home',
   RENT = 'Rent',
+  SALARY = 'Salary',
+  DEBt = 'Debt',
 }

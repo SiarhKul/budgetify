@@ -45,7 +45,6 @@ export class PiggyBankController {
   deletePiggyBank(
     @ParamMongoObjectId('id') id: string,
   ): Promise<PiggyBankDocument> {
-    //todo: transfer all many to the account
     return this.piggyBankService.deletePiggyBank(id);
   }
 

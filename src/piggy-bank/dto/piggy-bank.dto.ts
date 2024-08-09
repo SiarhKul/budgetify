@@ -1,5 +1,6 @@
 import { IsOptional, IsPositive, MinLength } from 'class-validator';
 import { ObjectId } from 'mongodb';
+import { IsMongoObjectId } from '../../decorators/IsMongoObjectId';
 
 export class PiggyBankDto {
   @MinLength(1, { message: 'Goal is too short' })
@@ -13,4 +14,7 @@ export class PiggyBankDto {
 
   @IsOptional()
   userId?: string;
+
+  @IsMongoObjectId()
+  accountId: string;
 }

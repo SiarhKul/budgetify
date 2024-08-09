@@ -13,15 +13,17 @@ import {
 } from '../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { IInfoPiggyBank } from '../ts/piggy-bank/piggy-bank.interfaces';
+import { MoneyAccount } from '../schemas/money-account.schema';
 
 @Injectable()
 export class PiggyBankService {
   constructor(
     @InjectModel(PiggyBank.name)
     private piggyBankModel: Model<PiggyBank>,
-
     @InjectModel(PiggyBankDeposit.name)
     private readonly piggyBankDepositModel: Model<PiggyBankDeposit>,
+    @InjectModel(MoneyAccount.name)
+    private readonly accountModel: Model<MoneyAccount>,
   ) {}
 
   async createBiggyBank(piggyBank: PiggyBankDto): Promise<PiggyBankDocument> {
@@ -38,8 +40,8 @@ export class PiggyBankService {
     return this.piggyBankModel.create(piggyBank);
   }
 
-  async getAllPiggyBanks(userId: string): Promise<PiggyBankDocument[]> {
-    return this.piggyBankModel.find({ user: userId }).populate('deposits');
+  async getAllPiggyBanks(userId: string) {
+    return this.piggyBankModel.find({ userId: userId }).populate('deposits');
   }
 
   async updatePiggyBank(
@@ -59,16 +61,6 @@ export class PiggyBankService {
     return piggyBankUpdated;
   }
 
-  async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
-    const findByIdAndDelete = await this.piggyBankModel.findByIdAndDelete(id);
-
-    if (!findByIdAndDelete) {
-      throw new NotFoundException('No piggy bank found with the given id');
-    }
-
-    return findByIdAndDelete;
-  }
-
   async depositToPiggyBank(
     deposit: PiggyBankDepositDto,
   ): Promise<PiggyBankDepositDocument> {
@@ -86,10 +78,6 @@ export class PiggyBankService {
   }
 
   async getInfoPiggyBank(id: string): Promise<IInfoPiggyBank> {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Invalid ObjectId');
-    }
-
     const [piggyBankInfo] = await this.piggyBankModel.aggregate([
       { $match: { _id: new Types.ObjectId(id) } },
       { $unwind: '$deposits' },
@@ -117,5 +105,27 @@ export class PiggyBankService {
     }
 
     return piggyBankInfo;
+  }
+
+  async deletePiggyBank(id: string): Promise<PiggyBankDocument> {
+    const deletedPiggyBank = await this.piggyBankModel.findByIdAndDelete(id);
+
+    if (!deletedPiggyBank) {
+      throw new NotFoundException('No piggy bank found with the given id');
+    }
+
+    const sumDeposits: number = deletedPiggyBank.deposits.reduce(
+      (balance: number, d) => balance + d.amountToSave,
+      0,
+    );
+
+    await this.accountModel.findOneAndUpdate(
+      {
+        _id: deletedPiggyBank.accountId,
+      },
+      { balance: sumDeposits },
+    );
+
+    return deletedPiggyBank;
   }
 }
