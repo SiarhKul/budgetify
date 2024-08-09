@@ -10,6 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 //todo inject userService instead of userModel
 
 @Injectable()
@@ -20,10 +21,11 @@ export class AuthService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async signUp(authDto: AuthDto) {
-    const saltOrRounds = 2;
+    const saltOrRounds = this.configService.get<string>('saltOrRounds');
     const hashedPassword = await bcrypt.hash(authDto.password, saltOrRounds);
 
     authDto.password = hashedPassword;

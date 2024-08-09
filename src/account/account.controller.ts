@@ -45,7 +45,7 @@ export class AccountController {
 
   @Get()
   getAccounts(@Request() req: IRequest): Promise<AccountDocument[]> {
-    const userId = req.user.sub;
+    const userId: string = req.user.sub;
     return this.accountService.getAccounts(userId);
   }
 }
