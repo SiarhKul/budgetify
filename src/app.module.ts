@@ -8,11 +8,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { useFactoryReturn } from '../config/config.mongo';
 import properties from '../config/config.parameters';
 import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
-import { AccountModule } from './account/account.module';
+import { MoneyAccountModule } from './money-account/money-account.module';
 
 @Module({
   imports: [
-    AccountModule,
+    MoneyAccountModule,
     TransactionModule,
     PiggyBankModule,
     ConfigModule.forRoot({
