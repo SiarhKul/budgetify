@@ -3,6 +3,7 @@ import { AccountDto } from './dto/account.dto';
 import { Account, AccountDocument } from '../schemas/account.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class AccountService {
@@ -48,11 +49,11 @@ export class AccountService {
     return findOneAndDelete;
   }
 
-  async getAccountIds(userId: string) {
+  async getAccountIds(userId: string): Promise<ObjectId[]> {
     return this.accountModel.find({ userId }, '_id');
   }
 
-  async getAccountById(accountId: string) {
+  async getAccountById(accountId: string): Promise<AccountDocument> {
     return this.accountModel.findById(accountId);
   }
 }
