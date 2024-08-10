@@ -11,6 +11,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthGuard } from './auth/auth.guard';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AuthGuard } from './auth/auth.guard';
     }),
     AuthModule,
     UsersModule,
+    FileUploadModule,
   ],
   providers: [
     {
