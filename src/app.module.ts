@@ -37,10 +37,10 @@ import { AuthGuard } from './auth/auth.guard';
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

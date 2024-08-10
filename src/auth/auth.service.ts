@@ -17,7 +17,6 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    @InjectModel(User.name)
     private jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
