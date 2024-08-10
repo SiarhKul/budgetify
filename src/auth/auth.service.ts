@@ -5,13 +5,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-//todo inject userService instead of userModel
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -19,9 +18,9 @@ export class AuthService {
 
   constructor(
     @InjectModel(User.name)
-    private userModel: Model<UserDocument>,
     private jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userService: UsersService,
   ) {}
 
   async signUp(authDto: AuthDto) {
@@ -30,7 +29,7 @@ export class AuthService {
 
     authDto.password = hashedPassword;
 
-    const createdUser = await this.userModel.create(authDto);
+    const createdUser = await this.userService.create(authDto);
 
     const payload = { userId: createdUser._id, email: createdUser.email };
 
@@ -38,9 +37,7 @@ export class AuthService {
   }
 
   async sighIn(email: string, pass: string): Promise<{ accessToken: string }> {
-    const user: UserDocument | null = await this.userModel.findOne({
-      email: email,
-    });
+    const user: UserDocument | null = await this.userService.findByEmail(email);
 
     if (!user) {
       throw new NotFoundException('Such user not found');
