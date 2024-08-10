@@ -4,8 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User, UserDocument } from '../schemas/user.schema';
-import { InjectModel } from '@nestjs/mongoose';
+import { UserDocument } from '../schemas/user.schema';
 import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
