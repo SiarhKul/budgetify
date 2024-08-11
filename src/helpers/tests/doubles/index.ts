@@ -60,7 +60,7 @@ export const TRANSACTION_DTO_DUMMY: TransactionDto = {
   paymentDate: new Date(),
   payee: 'Jon Doe',
   description: 'dummy description',
-  accountId: ACCOUNT_ID_DUMMY,
+  accountId: new ObjectId(ACCOUNT_ID_DUMMY),
 };
 
 export const PIGGY_BANK_DTO_DUMMY: PiggyBankDto = {
@@ -82,7 +82,7 @@ export const SUBSCRIPTION_DTO_DUMMY: CreateSubscriptionDto = {
   amount: 5,
   paymentDate: new Date('2012-03-12'),
   description: 'description2',
-  accountId: ACCOUNT_ID_DUMMY,
+  accountId: new ObjectId(ACCOUNT_ID_DUMMY),
 };
 
 //DOCUMENTS

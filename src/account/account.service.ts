@@ -3,6 +3,7 @@ import { AccountDto } from './dto/account.dto';
 import { Account, AccountDocument } from '../schemas/account.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class AccountService {
@@ -52,7 +53,7 @@ export class AccountService {
     return this.accountModel.find({ userId });
   }
 
-  subtractOrSumBalance(accountId: string, amount: number) {
+  subtractOrSumBalance(accountId: ObjectId, amount: number) {
     return this.accountModel.findOneAndUpdate(
       {
         _id: accountId,

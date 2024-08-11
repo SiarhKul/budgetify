@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { Categories } from '../../ts/transactons/transactions.enums';
 import { IsTypeOfDate } from '../../decorators/IsTypeOfDate';
+import { ObjectId } from 'mongodb';
 
 export class CreateSubscriptionDto {
   @MinLength(1, {
@@ -29,5 +30,5 @@ export class CreateSubscriptionDto {
   description?: string;
 
   @IsMongoId()
-  accountId: string;
+  accountId: ObjectId;
 }

@@ -4,10 +4,9 @@ import {
   Transaction,
   TransactionDocument,
 } from '../schemas/transaction.schema';
-import { Model, Types } from 'mongoose';
+import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
-import { Account } from '../schemas/account.schema';
 import { AccountService } from '../account/account.service';
 
 @Injectable()
@@ -16,16 +15,14 @@ export class TransactionService {
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
 
-    @InjectModel(Account.name)
-    private readonly accountModel: Model<Account>,
-
     private readonly accountService: AccountService,
   ) {}
 
   async createTransaction(
     transaction: TransactionDto,
+    files: Express.Multer.File[],
   ): Promise<TransactionDocument> {
-    const amount =
+    const amount: number =
       transaction.transactionType === TransactionType.INCOME
         ? transaction.amount
         : -transaction.amount;
@@ -35,14 +32,22 @@ export class TransactionService {
       amount,
     );
 
-    return this.transactionModel.create(transaction);
+    const transactionWithFiles: Transaction = {
+      ...transaction,
+      uploadedFiles: files,
+    };
+
+    return await this.transactionModel.create(transactionWithFiles);
   }
 
-  async getAllTransactions() {
+  async getAllTransactions(): Promise<TransactionDocument[]> {
     return this.transactionModel.find();
   }
 
-  async updateTransaction(id: string, transaction: TransactionDto) {
+  async updateTransaction(
+    id: string,
+    transaction: TransactionDto,
+  ): Promise<TransactionDocument> {
     const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
       id,
       transaction,
@@ -58,7 +63,9 @@ export class TransactionService {
     return updatedTransaction;
   }
 
-  async deleteTransaction(id: string): Promise<{ _id: Types.ObjectId }> {
+  async deleteTransaction(
+    id: string,
+  ): Promise<FlattenMaps<Transaction> & { _id: Types.ObjectId }> {
     const deletedTransaction = await this.transactionModel.findByIdAndDelete(
       id,
       {

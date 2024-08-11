@@ -4,6 +4,8 @@ import {
   TransactionType,
 } from '../ts/transactons/transactions.enums';
 import { HydratedDocument } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { MulterFile } from './multer-file.schema';
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -12,23 +14,29 @@ export class Transaction {
   @Prop({ type: String, required: true, enum: TransactionType })
   transactionType: TransactionType;
 
-  @Prop({ type: String, required: true })
+  @Prop({ required: true })
   title: string;
 
   @Prop({ type: String, required: true, enum: Categories })
   categories: Categories;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ required: true })
   amount: number;
 
-  @Prop({ type: Date, required: true })
+  @Prop({ required: true })
   paymentDate: Date;
 
-  @Prop({ type: String, required: false })
-  payee: string;
+  @Prop({ required: false })
+  payee?: string;
 
-  @Prop({ type: String, required: false })
-  description: string;
+  @Prop({ required: false })
+  description?: string;
+
+  @Prop({ required: true })
+  accountId: ObjectId;
+
+  @Prop({ required: true, type: [MulterFile] })
+  uploadedFiles: MulterFile[];
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

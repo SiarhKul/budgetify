@@ -21,10 +21,9 @@ export class TransactionController {
   @UseInterceptors(AnyFilesInterceptor())
   create(
     @Body() transaction: TransactionDto,
-    @UploadedFiles() files: Array<Express.Multer.File>,
+    @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log('----------', files);
-    return this.transactionService.createTransaction(transaction);
+    return this.transactionService.createTransaction(transaction, files);
   }
 
   @Delete(':id')
