@@ -1,14 +1,29 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionService } from './transaction.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 
   @Post()
-  create(@Body() transaction: TransactionDto) {
+  @UseInterceptors(AnyFilesInterceptor())
+  create(
+    @Body() transaction: TransactionDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    console.log('----------', files);
     return this.transactionService.createTransaction(transaction);
   }
 
