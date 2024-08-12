@@ -10,7 +10,7 @@ import {
   MoneyAccount,
   MoneyAccountSchema,
 } from '../schemas/money-account.schema';
-import { MoneyAccountService } from '../money-account/money-account.service'; // import AccountModule
+import { MoneyAccountService } from '../money-account/money-account.service';
 
 @Module({
   imports: [

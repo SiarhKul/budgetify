@@ -14,9 +14,7 @@ import {
   PiggyBankDeposit,
   PiggyBankDepositSchema,
 } from '../../../schemas/piggy-bank-deposit.schema';
-import {
-  PiggyBankDepositDto,
-} from '../../../piggy-bank/dto/piggy-bank-deposit.dto';
+import { PiggyBankDepositDto } from '../../../piggy-bank/dto/piggy-bank-deposit.dto';
 import { ObjectId } from 'mongodb';
 import {
   MoneyAccount,
@@ -27,9 +25,7 @@ import {
   SubscriptionDocument,
   SubscriptionSchema,
 } from '../../../schemas/subscription.schema';
-import {
-  CreateSubscriptionDto,
-} from '../../../subscription/dto/create-subscription.dto';
+import { CreateSubscriptionDto } from '../../../subscription/dto/create-subscription.dto';
 
 //MODELs
 export const TransactionModel = mongoose.model(
