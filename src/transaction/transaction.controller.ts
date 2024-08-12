@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
+  ParseFilePipeBuilder,
   Post,
   Put,
   UploadedFiles,
@@ -21,7 +23,19 @@ export class TransactionController {
   @UseInterceptors(AnyFilesInterceptor())
   create(
     @Body() transaction: TransactionDto,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /jpeg|png/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 1000 * 1024, // 1MB
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    files: Express.Multer.File[],
   ) {
     return this.transactionService.createTransaction(transaction, files);
   }
