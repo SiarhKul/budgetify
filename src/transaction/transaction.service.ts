@@ -8,6 +8,7 @@ import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { AccountService } from '../account/account.service';
+import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Injectable()
 export class TransactionService {
@@ -16,6 +17,7 @@ export class TransactionService {
     private readonly transactionModel: Model<Transaction>,
 
     private readonly accountService: AccountService,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   async createTransaction(
@@ -37,7 +39,11 @@ export class TransactionService {
       uploadedFiles: files,
     };
 
-    return await this.transactionModel.create(transactionWithFiles);
+    const listIds = await this.fileUploadService.uploadFiles(files);
+    console.log('=>(transaction.service.ts:43) listIds', listIds);
+
+    return 'Transaction created' as any;
+    // return await this.transactionModel.create(transactionWithFiles);
   }
 
   async getAllTransactions(): Promise<TransactionDocument[]> {

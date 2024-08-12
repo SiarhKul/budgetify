@@ -3,6 +3,7 @@ import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Account, AccountSchema } from '../schemas/account.schema';
+import { FileUpload, FileUploadSchema } from '../schemas/file-upload.schema';
 
 @Module({
   imports: [
@@ -10,6 +11,10 @@ import { Account, AccountSchema } from '../schemas/account.schema';
       {
         name: Account.name,
         schema: AccountSchema,
+      },
+      {
+        name: FileUpload.name,
+        schema: FileUploadSchema,
       },
     ]),
   ],

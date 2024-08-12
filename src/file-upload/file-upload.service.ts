@@ -10,13 +10,33 @@ export class FileUploadService {
     private readonly fileUploadModel: Model<FileUploadDocument>,
   ) {}
 
-  async uploadFile(file: Express.Multer.File): Promise<string> {
+  async uploadFiles(files: Express.Multer.File[]): Promise<string[]> {
     try {
-      const savedFile = await this.fileUploadModel.create({ file });
+      const savedFiles = await this.fileUploadModel.insertMany(files);
 
-      return savedFile._id.toString();
+      return savedFiles.map((file) => file._id.toString());
     } catch (error) {
-      throw new BadRequestException('Failed to upload file');
+      throw new BadRequestException(error.message);
     }
   }
 }
+/* [
+  {
+    fieldname: 'files',
+    originalname: '1.png',
+    encoding: '7bit',
+    mimetype: 'image/png',
+    buffer: <Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 01 55 00 00 00 de 08 02 00 00 00 02 6e 04 d6 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 128922 more bytes>,
+    size: 128972
+  },
+  {
+    fieldname: 'files',
+    originalname: 's.png',
+    encoding: '7bit',
+    mimetype: 'image/png',
+    buffer: <Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 03 7a 00 00 02 98 08 02 00 00 00 aa ca 1d 12 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 86732 more bytes>,
+    size: 86782
+  }
+]
+
+*/

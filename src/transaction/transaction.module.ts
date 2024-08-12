@@ -5,6 +5,8 @@ import { TransactionService } from './transaction.service';
 import { TransactionController } from './transaction.controller';
 import { Account, AccountSchema } from '../schemas/account.schema';
 import { AccountService } from '../account/account.service';
+import { FileUpload, FileUploadSchema } from '../schemas/file-upload.schema';
+import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Module({
   imports: [
@@ -17,9 +19,13 @@ import { AccountService } from '../account/account.service';
         name: Account.name,
         schema: AccountSchema,
       },
+      {
+        name: FileUpload.name,
+        schema: FileUploadSchema,
+      },
     ]),
   ],
-  providers: [TransactionService, AccountService],
+  providers: [TransactionService, AccountService, FileUploadService],
   controllers: [TransactionController],
 })
 export class TransactionModule {}
