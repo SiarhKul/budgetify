@@ -6,8 +6,11 @@ import {
   Subscription,
   SubscriptionSchema,
 } from '../schemas/subscription.schema';
-import { Account, AccountSchema } from '../schemas/account.schema';
-import { AccountService } from '../account/account.service'; // import AccountModule
+import {
+  MoneyAccount,
+  MoneyAccountSchema,
+} from '../schemas/money-account.schema';
+import { MoneyAccountService } from '../money-account/money-account.service'; // import AccountModule
 
 @Module({
   imports: [
@@ -17,12 +20,12 @@ import { AccountService } from '../account/account.service'; // import AccountMo
         schema: SubscriptionSchema,
       },
       {
-        name: Account.name,
-        schema: AccountSchema,
+        name: MoneyAccount.name,
+        schema: MoneyAccountSchema,
       },
     ]),
   ],
   controllers: [SubscriptionController],
-  providers: [SubscriptionService, AccountService],
+  providers: [SubscriptionService, MoneyAccountService],
 })
 export class SubscriptionModule {}

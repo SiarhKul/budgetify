@@ -11,7 +11,7 @@ import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
 import { MoneyAccount } from '../../schemas/money-account.schema';
 import { TransactionType } from '../../ts/transactons/transactions.enums';
-import { AccountService } from '../../account/account.service';
+import { MoneyAccountService } from '../../money-account/money-account.service';
 
 const mockTransactionModel = {
   findByIdAndDelete: jest.fn(),
@@ -37,7 +37,7 @@ describe('GIVEN TransactionService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TransactionService,
-        AccountService,
+        MoneyAccountService,
         {
           provide: getModelToken(Transaction.name),
           useValue: mockTransactionModel,

@@ -7,7 +7,7 @@ import {
   MoneyAccount,
   MoneyAccountSchema,
 } from '../schemas/money-account.schema';
-import { AccountService } from '../account/account.service';
+import { MoneyAccountService } from '../money-account/money-account.service';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { AccountService } from '../account/account.service';
       },
     ]),
   ],
-  providers: [TransactionService, AccountService],
+  providers: [TransactionService, MoneyAccountService],
   controllers: [TransactionController],
 })
 export class TransactionModule {}
