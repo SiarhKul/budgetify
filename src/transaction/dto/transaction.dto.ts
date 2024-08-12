@@ -1,4 +1,10 @@
-import { IsEnum, IsOptional, IsPositive, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsMongoId,
+  IsOptional,
+  IsPositive,
+  MinLength,
+} from 'class-validator';
 import {
   Categories,
   TransactionType,
@@ -32,4 +38,7 @@ export class TransactionDto {
 
   @IsOptional()
   description?: string;
+
+  @IsMongoId()
+  accountId: string;
 }

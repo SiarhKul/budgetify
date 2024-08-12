@@ -7,6 +7,10 @@ import {
   PiggyBankDeposit,
   PiggyBankDepositSchema,
 } from '../schemas/piggy-bank-deposit.schema';
+import {
+  MoneyAccount,
+  MoneyAccountSchema,
+} from '../schemas/money-account.schema';
 
 @Module({
   imports: [
@@ -18,6 +22,10 @@ import {
       {
         name: PiggyBankDeposit.name,
         schema: PiggyBankDepositSchema,
+      },
+      {
+        name: MoneyAccount.name,
+        schema: MoneyAccountSchema,
       },
     ]),
   ],

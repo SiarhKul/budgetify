@@ -3,6 +3,9 @@ import {
   Categories,
   TransactionType,
 } from '../ts/transactons/transactions.enums';
+import { HydratedDocument } from 'mongoose';
+
+export type TransactionDocument = HydratedDocument<Transaction>;
 
 @Schema({ versionKey: false })
 export class Transaction {
