@@ -9,7 +9,7 @@ import {
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
-import { Account } from '../../schemas/account.schema';
+import { MoneyAccount } from '../../schemas/money-account.schema';
 import { TransactionType } from '../../ts/transactons/transactions.enums';
 import { AccountService } from '../../account/account.service';
 
@@ -43,7 +43,7 @@ describe('GIVEN TransactionService', () => {
           useValue: mockTransactionModel,
         },
         {
-          provide: getModelToken(Account.name),
+          provide: getModelToken(MoneyAccount.name),
           useValue: mockAccountModel,
         },
       ],

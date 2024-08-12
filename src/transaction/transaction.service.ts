@@ -7,7 +7,7 @@ import {
 import { Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
-import { Account } from '../schemas/account.schema';
+import { MoneyAccount } from '../schemas/money-account.schema';
 import { AccountService } from '../account/account.service';
 
 @Injectable()
@@ -15,9 +15,6 @@ export class TransactionService {
   constructor(
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
-
-    @InjectModel(Account.name)
-    private readonly accountModel: Model<Account>,
 
     private readonly accountService: AccountService,
   ) {}

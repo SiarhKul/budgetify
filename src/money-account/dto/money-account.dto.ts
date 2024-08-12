@@ -1,7 +1,7 @@
 import { IsEnum, IsMongoId, IsOptional, MinLength } from 'class-validator';
 import { Currency } from '../../ts/account/account.enum';
 
-export class AccountDto {
+export class MoneyAccountDto {
   @MinLength(1, { message: 'Title is too short' })
   title: string;
 
