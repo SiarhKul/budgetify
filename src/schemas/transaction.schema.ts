@@ -3,7 +3,7 @@ import {
   Categories,
   TransactionType,
 } from '../ts/transactons/transactions.enums';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { MulterFile } from './multer-file.schema';
 
@@ -35,7 +35,11 @@ export class Transaction {
   @Prop({ required: true })
   accountId: ObjectId;
 
-  @Prop({ required: true, type: [MulterFile] })
+  @Prop({
+    required: false,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: MulterFile.name }],
+    default: [],
+  })
   uploadedFiles: MulterFile[];
 }
 

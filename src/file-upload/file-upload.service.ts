@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FileUpload, FileUploadDocument } from '../schemas/file-upload.schema';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class FileUploadService {
@@ -10,11 +11,11 @@ export class FileUploadService {
     private readonly fileUploadModel: Model<FileUploadDocument>,
   ) {}
 
-  async uploadFiles(files: Express.Multer.File[]): Promise<string[]> {
+  async uploadFiles(files: Express.Multer.File[]): Promise<ObjectId[]> {
     try {
       const savedFiles = await this.fileUploadModel.insertMany(files);
 
-      return savedFiles.map((file) => file._id.toString());
+      return savedFiles.map((file) => file._id);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

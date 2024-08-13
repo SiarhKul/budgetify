@@ -33,17 +33,13 @@ export class TransactionService {
       transaction.accountId,
       amount,
     );
-
-    const transactionWithFiles: Transaction = {
-      ...transaction,
-      uploadedFiles: files,
-    };
-
+    //todo: make uploadFiles as optional
     const listIds = await this.fileUploadService.uploadFiles(files);
-    console.log('=>(transaction.service.ts:43) listIds', listIds);
 
-    return 'Transaction created' as any;
-    // return await this.transactionModel.create(transactionWithFiles);
+    return await this.transactionModel.create({
+      ...transaction,
+      uploadedFiles: listIds,
+    });
   }
 
   async getAllTransactions(): Promise<TransactionDocument[]> {
