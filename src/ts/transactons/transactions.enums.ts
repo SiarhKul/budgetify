@@ -6,5 +6,7 @@ export enum Categories {
   HOME = 'Home',
   RENT = 'Rent',
   SALARY = 'Salary',
-  DEBt = 'Debt',
+  DEBT = 'Debt',
+  NETFLIX = 'Netflix',
+  DISNEY = 'Disney',
 }

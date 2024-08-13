@@ -59,4 +59,28 @@ export class MoneyAccountService {
   async getAccountById(accountId: string): Promise<MoneyAccountDocument> {
     return this.accountModel.findById(accountId);
   }
+
+  async subtractOrSumBalance(accountId: string, amount: number) {
+    const findOneAndUpdate = await this.accountModel.findOneAndUpdate(
+      {
+        _id: accountId,
+      },
+      {
+        $inc: {
+          balance: amount,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!findOneAndUpdate) {
+      throw new NotFoundException(
+        'No money-account found with the given id due to update',
+      );
+    }
+
+    return findOneAndUpdate;
+  }
 }

@@ -7,7 +7,7 @@ import {
 import { Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
-import { MoneyAccount } from '../schemas/money-account.schema';
+import { MoneyAccountService } from '../money-account/money-account.service';
 
 @Injectable()
 export class TransactionService {
@@ -15,8 +15,7 @@ export class TransactionService {
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
 
-    @InjectModel(MoneyAccount.name)
-    private readonly accountModel: Model<MoneyAccount>,
+    private readonly accountService: MoneyAccountService,
   ) {}
 
   async createTransaction(
@@ -27,18 +26,9 @@ export class TransactionService {
         ? transaction.amount
         : -transaction.amount;
 
-    await this.accountModel.findOneAndUpdate(
-      {
-        _id: transaction.accountId,
-      },
-      {
-        $inc: {
-          balance: amount,
-        },
-      },
-      {
-        new: true,
-      },
+    await this.accountService.subtractOrSumBalance(
+      transaction.accountId,
+      amount,
     );
 
     return this.transactionModel.create(transaction);

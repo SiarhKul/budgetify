@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { SubscriptionService } from './subscription.service';
+import { SubscriptionController } from './subscription.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Transaction, TransactionSchema } from '../schemas/transaction.schema';
-import { TransactionService } from './transaction.service';
-import { TransactionController } from './transaction.controller';
+import {
+  Subscription,
+  SubscriptionSchema,
+} from '../schemas/subscription.schema';
 import {
   MoneyAccount,
   MoneyAccountSchema,
@@ -13,8 +16,8 @@ import { MoneyAccountService } from '../money-account/money-account.service';
   imports: [
     MongooseModule.forFeature([
       {
-        name: Transaction.name,
-        schema: TransactionSchema,
+        name: Subscription.name,
+        schema: SubscriptionSchema,
       },
       {
         name: MoneyAccount.name,
@@ -22,7 +25,7 @@ import { MoneyAccountService } from '../money-account/money-account.service';
       },
     ]),
   ],
-  providers: [TransactionService, MoneyAccountService],
-  controllers: [TransactionController],
+  controllers: [SubscriptionController],
+  providers: [SubscriptionService, MoneyAccountService],
 })
-export class TransactionModule {}
+export class SubscriptionModule {}

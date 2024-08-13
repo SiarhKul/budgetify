@@ -1,6 +1,4 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
@@ -9,12 +7,14 @@ import { useFactoryReturn } from '../config/config.mongo';
 import properties from '../config/config.parameters';
 import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
 import { MoneyAccountModule } from './money-account/money-account.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
     MoneyAccountModule,
     TransactionModule,
     PiggyBankModule,
+    SubscriptionModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,

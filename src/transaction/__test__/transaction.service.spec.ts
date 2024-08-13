@@ -11,8 +11,12 @@ import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
 import { MoneyAccount } from '../../schemas/money-account.schema';
 import { TransactionType } from '../../ts/transactons/transactions.enums';
+import { MoneyAccountService } from '../../money-account/money-account.service';
 
-const mockTransactionModel = {
+type TMockTransactionModel = {
+  [K in keyof typeof TransactionModel]?: jest.Mock;
+};
+const mockTransactionModel: TMockTransactionModel = {
   findByIdAndDelete: jest.fn(),
   create: jest
     .fn()
@@ -25,8 +29,8 @@ const mockTransactionModel = {
   findByIdAndUpdate: jest.fn(),
 };
 
-const mockAccountModel = {
-  findOneAndUpdate: jest.fn(),
+const mockMoneyAccountService: Partial<MoneyAccountService> = {
+  subtractOrSumBalance: jest.fn().mockResolvedValue(new MoneyAccount()),
 };
 
 describe('GIVEN TransactionService', () => {
@@ -41,8 +45,8 @@ describe('GIVEN TransactionService', () => {
           useValue: mockTransactionModel,
         },
         {
-          provide: getModelToken(MoneyAccount.name),
-          useValue: mockAccountModel,
+          provide: MoneyAccountService,
+          useValue: mockMoneyAccountService,
         },
       ],
     }).compile();
@@ -68,18 +72,10 @@ describe('GIVEN TransactionService', () => {
     const result = await service.createTransaction(dto);
 
     expect(result._id).toBeInstanceOf(ObjectId);
-    expect(mockAccountModel.findOneAndUpdate).toHaveBeenCalledWith(
-      {
-        _id: TRANSACTION_DTO_DUMMY.accountId,
-      },
-      {
-        $inc: {
-          balance: balance,
-        },
-      },
-      {
-        new: true,
-      },
+
+    expect(mockMoneyAccountService.subtractOrSumBalance).toHaveBeenCalledWith(
+      TRANSACTION_DTO_DUMMY.accountId,
+      balance,
     );
   });
 
