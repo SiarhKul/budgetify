@@ -8,7 +8,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ExceptionsLoggerFilter());
   const configService = app.get(ConfigService);
-  const port = configService.get<number | undefined>('port');
+  const port = configService.get<number>('port');
 
   await app.listen(port);
 }
