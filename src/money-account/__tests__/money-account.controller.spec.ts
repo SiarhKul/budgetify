@@ -4,6 +4,7 @@ import { MoneyAccountService } from '../money-account.service';
 import { MoneyAccountDto } from '../dto/money-account.dto';
 import { Currency } from '../../ts/account/account.enum';
 import { ACCOUNT_ID_DUMMY, USER_ID_DUMMY } from '../../helpers/tests/doubles';
+import { IRequest } from '../../ts/auth/auth.interfaces';
 
 const ACCOUNT_DTO_DUMMY: MoneyAccountDto = {
   title: 'Test Account',
@@ -38,8 +39,11 @@ describe('GIVEN AccountController', () => {
   });
 
   it('SHOULD create an money-account', async () => {
+    // Arrange
+    const req = { user: { sub: USER_ID_DUMMY } } as IRequest;
+
     // Act
-    await accountController.createAccount(ACCOUNT_DTO_DUMMY, USER_ID_DUMMY);
+    await accountController.createAccount(ACCOUNT_DTO_DUMMY, req);
 
     // Assert
     expect(mockAccountService.createAccount).toHaveBeenCalledWith(
@@ -69,8 +73,11 @@ describe('GIVEN AccountController', () => {
   });
 
   it('SHOULD get all accounts', async () => {
+    //Arrange
+    const req = { user: { sub: USER_ID_DUMMY } } as IRequest;
+
     // Act
-    await accountController.getAccountIds(USER_ID_DUMMY);
+    await accountController.getAccountIds(req);
 
     // Assert
     expect(mockAccountService.getAccountIds).toHaveBeenCalledWith(
