@@ -16,12 +16,12 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
   ) {}
 
-  async signUp(authDto: AuthDto) {
+  async signUp(authDto: AuthDto): Promise<string> {
     const saltOrRounds = this.configService.get<string>('saltOrRounds');
     const hashedPassword = await bcrypt.hash(authDto.password, saltOrRounds);
 
@@ -38,7 +38,7 @@ export class AuthService {
     const user: UserDocument | null = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundException('Such user not found');
+      throw new NotFoundException('Such user not found with this email');
     }
 
     const isMatch = await bcrypt.compare(pass, user.password);

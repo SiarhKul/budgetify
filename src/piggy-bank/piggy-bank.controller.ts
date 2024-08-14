@@ -1,11 +1,19 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Request,
+} from '@nestjs/common';
 import { PiggyBankService } from './piggy-bank.service';
 import { PiggyBankDto } from './dto/piggy-bank.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { PiggyBankDocument } from '../schemas/piggy-bank.schema';
 import { PiggyBankDepositDto } from './dto/piggy-bank-deposit.dto';
 import { PiggyBankDepositDocument } from '../schemas/piggy-bank-deposit.schema';
-import { UserId } from '../decorators/UserId';
+import { IRequest } from '../ts/auth/auth.interfaces';
 
 @Controller('piggy-bank')
 export class PiggyBankController {
@@ -14,9 +22,9 @@ export class PiggyBankController {
   @Post()
   create(
     @Body() piggyBank: PiggyBankDto,
-    @UserId() userId: string,
+    @Request() req: IRequest,
   ): Promise<PiggyBankDocument> {
-    piggyBank.userId = userId;
+    piggyBank.userId = req.user.sub;
 
     return this.piggyBankService.createBiggyBank(piggyBank);
   }
@@ -29,7 +37,8 @@ export class PiggyBankController {
   }
 
   @Get()
-  getAllPiggyBanks(@UserId() userId: string): Promise<PiggyBankDocument[]> {
+  getAllPiggyBanks(@Request() req: IRequest): Promise<PiggyBankDocument[]> {
+    const userId = req.user.sub;
     return this.piggyBankService.getAllPiggyBanks(userId);
   }
 
