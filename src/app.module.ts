@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { useFactoryReturn } from '../config/config.mongo';
 import properties from '../config/config.parameters';
 import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
-import { AccountModule } from './account/account.module';
+import { MoneyAccountModule } from './money-account/money-account.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -14,7 +14,7 @@ import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
-    AccountModule,
+    MoneyAccountModule,
     TransactionModule,
     PiggyBankModule,
     SubscriptionModule,

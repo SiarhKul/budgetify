@@ -2,15 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionService } from '../subscription.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Subscription } from '../../schemas/subscription.schema';
-import { AccountService } from '../../account/account.service';
 import {
   SUBSCRIPTION_DOCUMENT_DUMMY,
   SUBSCRIPTION_DTO_DUMMY,
   SUBSCRIPTION_ID_DUMMY,
-  SubscriptionsModel,
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 import { NotFoundException } from '@nestjs/common';
+import { MoneyAccountService } from '../../money-account/money-account.service';
 
 const mockSubscriptionModel = {
   create: jest.fn(),
@@ -24,7 +23,7 @@ const mockAccountService = {
 };
 describe('SubscriptionService', () => {
   let subscriptionService: SubscriptionService;
-  let accountService: AccountService;
+  let accountService: MoneyAccountService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,14 +34,14 @@ describe('SubscriptionService', () => {
           useValue: mockSubscriptionModel,
         },
         {
-          provide: AccountService,
+          provide: MoneyAccountService,
           useValue: mockAccountService,
         },
       ],
     }).compile();
 
     subscriptionService = module.get<SubscriptionService>(SubscriptionService);
-    accountService = module.get<AccountService>(AccountService);
+    accountService = module.get<MoneyAccountService>(MoneyAccountService);
   });
 
   it('creates a subscription and updates account balance', async () => {

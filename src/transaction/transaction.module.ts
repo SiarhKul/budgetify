@@ -3,8 +3,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Transaction, TransactionSchema } from '../schemas/transaction.schema';
 import { TransactionService } from './transaction.service';
 import { TransactionController } from './transaction.controller';
-import { Account, AccountSchema } from '../schemas/account.schema';
-import { AccountService } from '../account/account.service';
+import {
+  MoneyAccount,
+  MoneyAccountSchema,
+} from '../schemas/money-account.schema';
+import { MoneyAccountService } from '../money-account/money-account.service';
 
 @Module({
   imports: [
@@ -14,12 +17,12 @@ import { AccountService } from '../account/account.service';
         schema: TransactionSchema,
       },
       {
-        name: Account.name,
-        schema: AccountSchema,
+        name: MoneyAccount.name,
+        schema: MoneyAccountSchema,
       },
     ]),
   ],
-  providers: [TransactionService, AccountService],
+  providers: [TransactionService, MoneyAccountService],
   controllers: [TransactionController],
 })
 export class TransactionModule {}

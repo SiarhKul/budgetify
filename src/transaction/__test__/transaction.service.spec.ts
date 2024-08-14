@@ -9,11 +9,14 @@ import {
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
-import { Account } from '../../schemas/account.schema';
+import { MoneyAccount } from '../../schemas/money-account.schema';
 import { TransactionType } from '../../ts/transactons/transactions.enums';
-import { AccountService } from '../../account/account.service';
+import { MoneyAccountService } from '../../money-account/money-account.service';
 
-const mockTransactionModel = {
+type TMockTransactionModel = {
+  [K in keyof typeof TransactionModel]?: jest.Mock;
+};
+const mockTransactionModel: TMockTransactionModel = {
   findByIdAndDelete: jest.fn(),
   create: jest
     .fn()
@@ -26,8 +29,8 @@ const mockTransactionModel = {
   findByIdAndUpdate: jest.fn(),
 };
 
-const mockAccountModel = {
-  findOneAndUpdate: jest.fn(),
+const mockMoneyAccountService: Partial<MoneyAccountService> = {
+  subtractOrSumBalance: jest.fn().mockResolvedValue(new MoneyAccount()),
 };
 
 describe('GIVEN TransactionService', () => {
@@ -37,14 +40,13 @@ describe('GIVEN TransactionService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TransactionService,
-        AccountService,
         {
           provide: getModelToken(Transaction.name),
           useValue: mockTransactionModel,
         },
         {
-          provide: getModelToken(Account.name),
-          useValue: mockAccountModel,
+          provide: MoneyAccountService,
+          useValue: mockMoneyAccountService,
         },
       ],
     }).compile();
@@ -70,18 +72,10 @@ describe('GIVEN TransactionService', () => {
     const result = await service.createTransaction(dto);
 
     expect(result._id).toBeInstanceOf(ObjectId);
-    expect(mockAccountModel.findOneAndUpdate).toHaveBeenCalledWith(
-      {
-        _id: TRANSACTION_DTO_DUMMY.accountId,
-      },
-      {
-        $inc: {
-          balance: balance,
-        },
-      },
-      {
-        new: true,
-      },
+
+    expect(mockMoneyAccountService.subtractOrSumBalance).toHaveBeenCalledWith(
+      TRANSACTION_DTO_DUMMY.accountId,
+      balance,
     );
   });
 

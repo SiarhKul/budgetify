@@ -1,9 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionController } from '../subscription.controller';
 import { SubscriptionService } from '../subscription.service';
-import { CreateSubscriptionDto } from '../dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from '../dto/update-subscription.dto';
-import { Categories } from '../../ts/transactons/transactions.enums';
 import {
   SUBSCRIPTION_DTO_DUMMY,
   SUBSCRIPTION_ID_DUMMY,

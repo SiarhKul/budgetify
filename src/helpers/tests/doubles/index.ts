@@ -16,13 +16,15 @@ import {
 } from '../../../schemas/piggy-bank-deposit.schema';
 import { PiggyBankDepositDto } from '../../../piggy-bank/dto/piggy-bank-deposit.dto';
 import { ObjectId } from 'mongodb';
-import { Account, AccountSchema } from '../../../schemas/account.schema';
+import {
+  MoneyAccount,
+  MoneyAccountSchema,
+} from '../../../schemas/money-account.schema';
 import {
   Subscription,
   SubscriptionDocument,
   SubscriptionSchema,
 } from '../../../schemas/subscription.schema';
-import { UpdateSubscriptionDto } from '../../../subscription/dto/update-subscription.dto';
 import { CreateSubscriptionDto } from '../../../subscription/dto/create-subscription.dto';
 
 //MODELs
@@ -38,7 +40,10 @@ export const PiggyBankDepositModel = mongoose.model(
   PiggyBankDepositSchema,
 );
 
-export const AccountModel = mongoose.model(Account.name, AccountSchema);
+export const AccountModel = mongoose.model(
+  MoneyAccount.name,
+  MoneyAccountSchema,
+);
 export const SubscriptionsModel = mongoose.model(
   Subscription.name,
   SubscriptionSchema,
