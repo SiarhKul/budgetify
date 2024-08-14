@@ -14,6 +14,7 @@ import { TransactionDto } from './dto/transaction.dto';
 import { TransactionService } from './transaction.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { TransactionDocument } from '../schemas/transaction.schema';
 
 @Controller('transaction')
 export class TransactionController {
@@ -56,5 +57,12 @@ export class TransactionController {
     @Body() transaction: TransactionDto,
   ) {
     return this.transactionService.updateTransaction(id, transaction);
+  }
+
+  @Get(':id')
+  getTransactionById(
+    @ParamMongoObjectId('id') id: string,
+  ): Promise<TransactionDocument> {
+    return this.transactionService.getTransactionById(id);
   }
 }

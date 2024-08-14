@@ -7,6 +7,7 @@ import { Account, AccountSchema } from '../schemas/account.schema';
 import { AccountService } from '../account/account.service';
 import { FileUpload, FileUploadSchema } from '../schemas/file-upload.schema';
 import { FileUploadService } from '../file-upload/file-upload.service';
+import { MulterFile, MulterFileSchema } from '../schemas/multer-file.schema';
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { FileUploadService } from '../file-upload/file-upload.service';
       {
         name: FileUpload.name,
         schema: FileUploadSchema,
+      },
+      {
+        name: MulterFile.name,
+        schema: MulterFileSchema,
       },
     ]),
   ],

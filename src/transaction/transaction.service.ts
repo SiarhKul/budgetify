@@ -9,12 +9,16 @@ import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { AccountService } from '../account/account.service';
 import { FileUploadService } from '../file-upload/file-upload.service';
+import { MulterFile, MulterFileDocument } from '../schemas/multer-file.schema';
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
+
+    @InjectModel(MulterFile.name)
+    private readonly multerFileModel: Model<MulterFileDocument>,
 
     private readonly accountService: AccountService,
     private readonly fileUploadService: FileUploadService,
@@ -81,5 +85,26 @@ export class TransactionService {
     }
 
     return deletedTransaction;
+  }
+
+  async getTransactionById(id: string): Promise<TransactionDocument> {
+    const transaction = await this.transactionModel.findById(id);
+
+    console.log('Before populate: ', transaction);
+
+    // Check if the documents exist in the MulterFile collection
+    const multerFiles = await this.multerFileModel.findById(
+      transaction.uploadedFiles[0],
+    );
+    console.log('MulterFiles: ', multerFiles);
+
+    await transaction.populate('uploadedFiles');
+    console.log('After populate: ', transaction);
+
+    if (!transaction) {
+      throw new NotFoundException('No transaction found with the given id');
+    }
+
+    return transaction;
   }
 }
