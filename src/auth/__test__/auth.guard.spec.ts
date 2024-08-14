@@ -122,4 +122,29 @@ describe('GIVEN AuthGuard', () => {
       { secret: '12345' },
     );
   });
+
+  it('SHOULD thrown UnauthorizedException if the token fails verification', async () => {
+    MOCK_REFLECTOR_DUMMY.getAllAndOverride = jest.fn().mockReturnValue(false);
+    CONTEXT_DUMMY.switchToHttp = jest.fn().mockReturnValue({
+      getRequest: jest.fn().mockReturnValue({
+        headers: {
+          authorization: 'Bearer 123.token.456',
+        },
+      }),
+    });
+
+    JWT_SERVICE_DUMMY.verifyAsync = jest
+      .fn()
+      .mockRejectedValue('Invalid token');
+
+    const guard = new AuthGuard(
+      JWT_SERVICE_DUMMY,
+      CONFIG_SERVICE_DUMMY,
+      MOCK_REFLECTOR_DUMMY,
+    );
+
+    await expect(guard.canActivate(CONTEXT_DUMMY)).rejects.toThrow(
+      UnauthorizedException,
+    );
+  });
 });
