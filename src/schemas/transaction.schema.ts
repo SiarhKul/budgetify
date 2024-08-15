@@ -5,7 +5,7 @@ import {
 } from '../ts/transactons/transactions.enums';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { MulterFile } from './multer-file.schema';
+import { FileUpload } from './file-upload.schema';
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -37,10 +37,10 @@ export class Transaction {
 
   @Prop({
     required: false,
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: MulterFile.name }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: FileUpload.name }],
     default: [],
   })
-  uploadedFiles: MulterFile[];
+  uploadedFiles: FileUpload[];
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);
