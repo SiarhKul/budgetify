@@ -9,15 +9,14 @@ export class AuthController {
 
   @Public()
   @Post('sighup')
-  @HttpCode(HttpStatus.OK)
-  signUp(@Body() authDto: AuthDto) {
+  signUp(@Body() authDto: AuthDto): Promise<string> {
     return this.authService.signUp(authDto);
   }
 
   @Public()
   @Post('sighin')
   @HttpCode(HttpStatus.OK)
-  signIn(@Body() authDto: AuthDto) {
+  signIn(@Body() authDto: AuthDto): Promise<{ accessToken: string }> {
     return this.authService.sighIn(authDto.email, authDto.password);
   }
 }

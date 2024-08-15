@@ -11,7 +11,7 @@ import { UsersService } from '../users/users.service';
     JwtModule.register({
       global: true,
       secret: '12345',
-      // signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1d' },
     }),
     MongooseModule.forFeature([
       {
