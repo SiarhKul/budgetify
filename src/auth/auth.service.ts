@@ -48,7 +48,7 @@ export class AuthService {
     }
 
     const isMatch = await bcrypt.compare(pass, user.password);
-    this.logger.log(`User with ${user.email} has been registered`);
+    this.logger.log(`User with ${user.email} is visiting the app`);
 
     if (!isMatch) {
       throw new UnauthorizedException('Email or password not found');
