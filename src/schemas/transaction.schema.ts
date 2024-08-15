@@ -40,7 +40,7 @@ export class Transaction {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: FileUpload.name }],
     default: [],
   })
-  uploadedFiles: FileUpload[];
+  uploadedFiles?: FileUpload[];
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

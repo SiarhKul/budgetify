@@ -20,6 +20,11 @@ export class FileUploadService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async downloadFile(id: string) {
+    const file = await this.fileUploadModel.findById(id);
+    console.log('aaaaaa', file);
+  }
 }
 /* [
   {

@@ -1,11 +1,14 @@
 import {
   Controller,
+  Get,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
+import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 
 @Controller('file')
 export class FileUploadController {
@@ -15,5 +18,10 @@ export class FileUploadController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File[]) {
     return this.fileUploadService.uploadFiles(file);
+  }
+
+  @Get('download/:id')
+  downloadFile(@ParamMongoObjectId() id: string) {
+    return this.fileUploadService.downloadFile(id);
   }
 }
