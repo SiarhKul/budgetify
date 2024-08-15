@@ -64,6 +64,7 @@ export class TransactionService {
     transaction: TransactionDto,
     files: Express.Multer.File[],
   ): Promise<TransactionDocument> {
+    console.log('4444444444444444444', files);
     const amount: number =
       transaction.transactionType === TransactionType.INCOME
         ? transaction.amount

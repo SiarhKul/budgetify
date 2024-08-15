@@ -9,6 +9,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import type { Response } from 'express';
 
 @Controller('file')
 export class FileUploadController {

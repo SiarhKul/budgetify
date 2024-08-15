@@ -1,8 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FileUpload, FileUploadDocument } from '../schemas/file-upload.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { Readable } from 'stream';
 
 @Injectable()
 export class FileUploadService {
@@ -21,9 +27,27 @@ export class FileUploadService {
     }
   }
 
-  async downloadFile(id: string) {
+  async downloadFile(id: string): Promise<StreamableFile> {
     const file = await this.fileUploadModel.findById(id);
-    console.log('aaaaaa', file);
+
+    if (!file) {
+      throw new NotFoundException('File not found');
+    }
+
+    const fileStream: Readable = this.bufferToStream(file.buffer);
+
+    return new StreamableFile(fileStream, {
+      type: file.mimetype,
+      disposition: `attachment; filename="${file.originalname}"`,
+    });
+  }
+
+  private bufferToStream(buffer: Buffer): Readable {
+    const buf: Buffer = Buffer.from(buffer);
+    const stream = new Readable();
+    stream.push(buf);
+    stream.push(null);
+    return stream;
   }
 }
 /* [
@@ -34,15 +58,6 @@ export class FileUploadService {
     mimetype: 'image/png',
     buffer: <Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 01 55 00 00 00 de 08 02 00 00 00 02 6e 04 d6 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 128922 more bytes>,
     size: 128972
-  },
-  {
-    fieldname: 'files',
-    originalname: 's.png',
-    encoding: '7bit',
-    mimetype: 'image/png',
-    buffer: <Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 03 7a 00 00 02 98 08 02 00 00 00 aa ca 1d 12 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 86732 more bytes>,
-    size: 86782
   }
 ]
-
 */
