@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -27,11 +28,16 @@ export class AuthService {
 
     authDto.password = hashedPassword;
 
-    const createdUser = await this.userService.create(authDto);
+    try {
+      const createdUser = await this.userService.create(authDto);
+      const payload = { userId: createdUser._id, email: createdUser.email };
 
-    const payload = { userId: createdUser._id, email: createdUser.email };
-
-    return await this.jwtService.signAsync(payload);
+      return await this.jwtService.signAsync(payload);
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('Email already exists');
+      }
+    }
   }
 
   async sighIn(email: string, pass: string): Promise<{ accessToken: string }> {
