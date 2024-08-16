@@ -1,10 +1,18 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Request,
+} from '@nestjs/common';
 import { MoneyAccountService } from './money-account.service';
 import { MoneyAccountDto } from './dto/money-account.dto';
 import { MoneyAccountDocument } from '../schemas/money-account.schema';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
-import { UserId } from '../decorators/UserId';
 import { ObjectId } from 'mongodb';
+import { IRequest } from '../ts/auth/auth.interfaces';
 
 @Controller('money-account')
 export class AccountController {
@@ -13,9 +21,9 @@ export class AccountController {
   @Post()
   createAccount(
     @Body() account: MoneyAccountDto,
-    @UserId() userId: string,
+    @Request() req: IRequest,
   ): Promise<MoneyAccountDocument> {
-    account.userId = userId;
+    account.userId = req.user.sub;
 
     return this.accountService.createAccount(account);
   }
@@ -35,9 +43,9 @@ export class AccountController {
     return this.accountService.deleteAccount(accountId);
   }
 
-  //todo: extract userId from @Request after implementation auth
   @Get()
-  getAccountIds(@UserId() userId: string): Promise<ObjectId[]> {
+  getAccountIds(@Request() req: IRequest): Promise<ObjectId[]> {
+    const userId = req.user.sub;
     return this.accountService.getAccountIds(userId);
   }
 

@@ -1,5 +1,5 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +8,9 @@ import properties from '../config/config.parameters';
 import { PiggyBankModule } from './piggy-bank/piggy-bank.module';
 import { MoneyAccountModule } from './money-account/money-account.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -26,11 +29,17 @@ import { SubscriptionModule } from './subscription/subscription.module';
       useFactory: async (configService: ConfigService) =>
         useFactoryReturn(configService),
     }),
+    AuthModule,
+    UsersModule,
   ],
   providers: [
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
