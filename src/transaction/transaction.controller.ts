@@ -33,6 +33,7 @@ export class TransactionController {
           maxSize: 1000 * 1024, // 1MB
         })
         .build({
+          fileIsRequired: false,
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
     )
@@ -47,7 +48,7 @@ export class TransactionController {
   }
 
   @Get()
-  getAllTransactions() {
+  getAllTransactions(): Promise<TransactionDocument[]> {
     return this.transactionService.getAllTransactions();
   }
 
@@ -55,7 +56,7 @@ export class TransactionController {
   update(
     @ParamMongoObjectId('id') id: string,
     @Body() transaction: TransactionDto,
-  ) {
+  ): Promise<TransactionDocument> {
     return this.transactionService.updateTransaction(id, transaction);
   }
 
