@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Post,
   UploadedFile,
@@ -22,5 +23,10 @@ export class FileUploadController {
   @Get('download/:id')
   downloadFile(@ParamMongoObjectId() id: string) {
     return this.fileUploadService.downloadFile(id);
+  }
+
+  @Delete(':id')
+  deleteFile(@ParamMongoObjectId() id: string) {
+    return this.fileUploadService.deleteFile(id);
   }
 }
