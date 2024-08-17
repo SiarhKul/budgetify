@@ -73,7 +73,7 @@ export class TransactionService {
       transaction.accountId,
       amount,
     );
-    //todo: make uploadFiles as optional
+
     const listIds = await this.fileUploadService.uploadFiles(files);
 
     return await this.transactionModel.create({

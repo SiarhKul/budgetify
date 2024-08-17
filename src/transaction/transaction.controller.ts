@@ -38,7 +38,7 @@ export class TransactionController {
         }),
     )
     files: Express.Multer.File[],
-  ) {
+  ): Promise<TransactionDocument> {
     return this.transactionService.createTransaction(transaction, files);
   }
 

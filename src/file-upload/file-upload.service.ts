@@ -42,14 +42,6 @@ export class FileUploadService {
     });
   }
 
-  private bufferToStream(buffer: Buffer): Readable {
-    const buf: Buffer = Buffer.from(buffer);
-    const stream = new Readable();
-    stream.push(buf);
-    stream.push(null);
-    return stream;
-  }
-
   async deleteFile(id: string): Promise<FileUploadDocument> {
     const findByIdAndDelete: FileUploadDocument | null =
       await this.fileUploadModel.findByIdAndDelete(id);
@@ -59,5 +51,13 @@ export class FileUploadService {
     }
 
     return findByIdAndDelete;
+  }
+
+  private bufferToStream(buffer: Buffer): Readable {
+    const buf: Buffer = Buffer.from(buffer);
+    const stream = new Readable();
+    stream.push(buf);
+    stream.push(null);
+    return stream;
   }
 }
