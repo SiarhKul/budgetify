@@ -34,6 +34,9 @@ const mockMoneyAccountService: Partial<MoneyAccountService> = {
   subtractOrSumBalance: jest.fn().mockResolvedValue(new MoneyAccount()),
 };
 
+const mockFileUploadService = {
+  uploadFiles: jest.fn(),
+};
 describe('GIVEN TransactionService', () => {
   let service: TransactionService;
 
@@ -51,7 +54,7 @@ describe('GIVEN TransactionService', () => {
         },
         {
           provide: FileUploadService,
-          useValue: {},
+          useValue: mockFileUploadService,
         },
       ],
     }).compile();
@@ -77,7 +80,7 @@ describe('GIVEN TransactionService', () => {
     const result = await service.createTransaction(dto, []);
 
     expect(result._id).toBeInstanceOf(ObjectId);
-
+    expect(mockFileUploadService.uploadFiles).toHaveBeenCalled();
     expect(mockMoneyAccountService.subtractOrSumBalance).toHaveBeenCalledWith(
       TRANSACTION_DTO_DUMMY.accountId,
       balance,

@@ -63,7 +63,7 @@ export class TransactionService {
 
   async createTransaction(
     transaction: TransactionDto,
-    files: Express.Multer.File[],
+    files?: Express.Multer.File[],
   ): Promise<TransactionDocument> {
     const amount: number =
       transaction.transactionType === TransactionType.INCOME
