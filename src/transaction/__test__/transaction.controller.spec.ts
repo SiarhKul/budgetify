@@ -38,7 +38,7 @@ describe('GIVE TransactionController', () => {
   });
 
   it('should return the created transaction when valid data is provided', async () => {
-    const transaction = await controller.create(TRANSACTION_DTO_DUMMY);
+    const transaction = await controller.create(TRANSACTION_DTO_DUMMY, []);
 
     expect(transaction.transactionType).toEqual(
       TRANSACTION_DTO_DUMMY.transactionType,

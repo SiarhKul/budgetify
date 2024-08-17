@@ -7,12 +7,12 @@ import {
   SubscriptionDocument,
 } from '../schemas/subscription.schema';
 import { Model } from 'mongoose';
-import { AccountService } from '../account/account.service';
+import { MoneyAccountService } from '../money-account/money-account.service';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
-    private readonly accountService: AccountService,
+    private readonly moneyAccountService: MoneyAccountService,
 
     @InjectModel(Subscription.name)
     private readonly subscriptionModel: Model<SubscriptionDocument>,
@@ -21,7 +21,7 @@ export class SubscriptionService {
   async create(
     createSubscriptionDto: CreateSubscriptionDto,
   ): Promise<SubscriptionDocument> {
-    await this.accountService.subtractOrSumBalance(
+    await this.moneyAccountService.subtractOrSumBalance(
       createSubscriptionDto.accountId,
       -createSubscriptionDto.amount,
     );

@@ -12,6 +12,7 @@ import {
 import { PiggyBankDto } from '../dto/piggy-bank.dto';
 import { ObjectId } from 'mongodb';
 import { PiggyBankDepositDto } from '../dto/piggy-bank-deposit.dto';
+import { IRequest } from '../../ts/auth/auth.interfaces';
 
 const mockPiggyBankService: Partial<PiggyBankService> = {
   createBiggyBank: jest
@@ -61,9 +62,11 @@ describe('GIVE PiggyBankController', () => {
   });
 
   it('should createBiggyBank returns correct piggy bank document', async () => {
+    const req = { user: { sub: USER_ID_DUMMY } } as IRequest;
+
     const { _id, deposits, goal, goalAmount } = await controller.create(
       PIGGY_BANK_DTO_DUMMY,
-      USER_ID_DUMMY,
+      req,
     );
 
     expect(mockPiggyBankService.createBiggyBank).toHaveBeenCalledWith(
@@ -97,7 +100,8 @@ describe('GIVE PiggyBankController', () => {
   });
 
   it('should getAllPiggyBanks returns correct all piggy banks', async () => {
-    const piggyBanks = await controller.getAllPiggyBanks(USER_ID_DUMMY);
+    const req = { user: { sub: USER_ID_DUMMY } } as IRequest;
+    const piggyBanks = await controller.getAllPiggyBanks(req);
 
     expect(mockPiggyBankService.getAllPiggyBanks).toHaveBeenCalledWith(
       USER_ID_DUMMY,

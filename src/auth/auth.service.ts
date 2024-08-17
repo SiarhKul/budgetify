@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -16,33 +17,38 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
   ) {}
 
-  async signUp(authDto: AuthDto) {
+  async signUp(authDto: AuthDto): Promise<string> {
     const saltOrRounds = this.configService.get<string>('saltOrRounds');
     const hashedPassword = await bcrypt.hash(authDto.password, saltOrRounds);
 
     authDto.password = hashedPassword;
 
-    const createdUser = await this.userService.create(authDto);
+    try {
+      const createdUser = await this.userService.create(authDto);
+      const payload = { userId: createdUser._id, email: createdUser.email };
 
-    const payload = { userId: createdUser._id, email: createdUser.email };
-
-    return await this.jwtService.signAsync(payload);
+      return await this.jwtService.signAsync(payload);
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('Email already exists');
+      }
+    }
   }
 
   async sighIn(email: string, pass: string): Promise<{ accessToken: string }> {
     const user: UserDocument | null = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundException('Such user not found');
+      throw new NotFoundException('Such user not found with this email');
     }
 
     const isMatch = await bcrypt.compare(pass, user.password);
-    this.logger.log(`User with ${user.email} has been registered`);
+    this.logger.log(`User with ${user.email} is visiting the app`);
 
     if (!isMatch) {
       throw new UnauthorizedException('Email or password not found');

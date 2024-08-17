@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { AccountService } from '../account.service';
-import { AccountDto } from '../dto/account.dto';
+import { MoneyAccountService } from '../money-account.service';
+import { MoneyAccountDto } from '../dto/money-account.dto';
 import { Currency } from '../../ts/account/account.enum';
-import { Account } from '../../schemas/account.schema';
+import { MoneyAccount } from '../../schemas/money-account.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import {
   ACCOUNT_ID_DUMMY,
@@ -12,9 +12,9 @@ import {
 } from '../../helpers/tests/doubles';
 import { ObjectId } from 'mongodb';
 
-const ACCOUNT_DTO: AccountDto = {
+const ACCOUNT_DTO: MoneyAccountDto = {
   title: 'Test Account',
-  description: 'This is a test account',
+  description: 'This is a test money-account',
   currency: Currency.EUR,
   userId: USER_ID_DUMMY,
 };
@@ -24,26 +24,27 @@ const mockAccountModel = {
   findOneAndUpdate: jest.fn(),
   findOneAndDelete: jest.fn(),
   find: jest.fn(),
+  findById: jest.fn(),
 };
 
-describe('GIVEN AccountService', () => {
-  let service: AccountService;
+describe('GIVEN MoneyAccountService', () => {
+  let service: MoneyAccountService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AccountService,
+        MoneyAccountService,
         {
-          provide: getModelToken(Account.name),
+          provide: getModelToken(MoneyAccount.name),
           useValue: mockAccountModel,
         },
       ],
     }).compile();
 
-    service = module.get<AccountService>(AccountService);
+    service = module.get<MoneyAccountService>(MoneyAccountService);
   });
 
-  it('SHOULD create an account', async () => {
+  it('SHOULD create an money-account', async () => {
     // Arrange
     mockAccountModel.create.mockResolvedValue(ACCOUNT_DTO);
 
@@ -56,7 +57,7 @@ describe('GIVEN AccountService', () => {
   });
 
   describe('GIVEN updateAccount method', () => {
-    it('should throw an error when updating a non-existing account', async () => {
+    it('should throw an error when updating a non-existing money-account', async () => {
       //Act
       mockAccountModel.findOneAndUpdate.mockResolvedValue(null);
 
@@ -69,7 +70,7 @@ describe('GIVEN AccountService', () => {
     it('SHOULD updateAccount method returns correct data', async () => {
       //Arrange
       mockAccountModel.findOneAndUpdate.mockImplementation(
-        (accountDto: AccountDto) => {
+        (accountDto: MoneyAccountDto) => {
           return Promise.resolve(new AccountModel(accountDto));
         },
       );
@@ -89,12 +90,12 @@ describe('GIVEN AccountService', () => {
   });
 
   describe('GIVEN deleteAccount method', () => {
-    it('should delete an account', async () => {
+    it('should delete an money-account', async () => {
       // Arrange
-      const accountDto: Account = {
+      const accountDto: MoneyAccount = {
         balance: 0,
         title: 'Deleted Account',
-        description: 'This is a deleted account',
+        description: 'This is a deleted money-account',
         currency: Currency.EUR,
         userId: new ObjectId(USER_ID_DUMMY),
       };
@@ -110,7 +111,7 @@ describe('GIVEN AccountService', () => {
       expect(result._id).toBeInstanceOf(ObjectId);
     });
 
-    it('should throw an error when deleting a non-existing account', async () => {
+    it('should throw an error when deleting a non-existing money-account', async () => {
       //Arrange
       mockAccountModel.findOneAndDelete.mockResolvedValue(null);
 
@@ -125,12 +126,27 @@ describe('GIVEN AccountService', () => {
     //Arrange
     mockAccountModel.find.mockResolvedValue([ACCOUNT_DTO]);
     //Act
-    const result = await service.getAccounts(USER_ID_DUMMY);
+    const result = await service.getAccountIds(USER_ID_DUMMY);
 
     //Assert
     expect(result).toEqual([ACCOUNT_DTO]);
-    expect(mockAccountModel.find).toHaveBeenCalledWith({
-      userId: USER_ID_DUMMY,
-    });
+    expect(mockAccountModel.find).toHaveBeenCalledWith(
+      {
+        userId: USER_ID_DUMMY,
+      },
+      '_id',
+    );
+  });
+
+  it('should find money-account by Id', async () => {
+    //Arrange
+    mockAccountModel.findById.mockResolvedValue(new AccountModel(ACCOUNT_DTO));
+
+    //Act
+    const result = await mockAccountModel.findById(ACCOUNT_ID_DUMMY);
+
+    //Assert
+    expect(mockAccountModel.findById).toHaveBeenCalledWith(ACCOUNT_ID_DUMMY);
+    expect(result._id).toBeInstanceOf(ObjectId);
   });
 });

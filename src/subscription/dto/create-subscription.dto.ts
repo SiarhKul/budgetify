@@ -30,5 +30,5 @@ export class CreateSubscriptionDto {
   description?: string;
 
   @IsMongoId()
-  accountId: ObjectId;
+  accountId: string;
 }

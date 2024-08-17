@@ -7,7 +7,7 @@ import {
 import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
-import { AccountService } from '../account/account.service';
+import { MoneyAccountService } from '../money-account/money-account.service';
 import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Injectable()
@@ -15,7 +15,8 @@ export class TransactionService {
   constructor(
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
-    private readonly accountService: AccountService,
+
+    private readonly accountService: MoneyAccountService,
     private readonly fileUploadService: FileUploadService,
   ) {}
 

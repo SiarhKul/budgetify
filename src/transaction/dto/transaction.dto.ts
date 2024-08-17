@@ -11,7 +11,6 @@ import {
 } from '../../ts/transactons/transactions.enums';
 import { IsTypeOfDate } from '../../decorators/IsTypeOfDate';
 import { Transform } from 'class-transformer';
-import { ObjectId } from 'mongodb';
 
 export class TransactionDto {
   @IsEnum(TransactionType, {
@@ -43,5 +42,5 @@ export class TransactionDto {
   description?: string;
 
   @IsMongoId()
-  accountId: ObjectId;
+  accountId: string;
 }
