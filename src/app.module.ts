@@ -1,5 +1,5 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -10,7 +10,6 @@ import { MoneyAccountModule } from './money-account/money-account.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { AuthGuard } from './auth/auth.guard';
 import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
@@ -19,6 +18,9 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     TransactionModule,
     PiggyBankModule,
     SubscriptionModule,
+    AuthModule,
+    UsersModule,
+    FileUploadModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
@@ -38,10 +40,6 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
     },
   ],
 })
