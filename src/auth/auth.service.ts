@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
-
+import { MongoServerError } from 'mongodb';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -31,10 +31,9 @@ export class AuthService {
     try {
       const createdUser = await this.userService.create(authDto);
       const payload = { userId: createdUser._id, email: createdUser.email };
-
       return await this.jwtService.signAsync(payload);
     } catch (error) {
-      if (error.code === 11000) {
+      if (error instanceof MongoServerError && error.code === 11000) {
         throw new ConflictException('Email already exists');
       }
     }
