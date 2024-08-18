@@ -28,7 +28,7 @@ import { FileUploadService } from '../file-upload/file-upload.service';
       },
     ]),
   ],
-  providers: [TransactionService, MoneyAccountService,FileUploadService],
+  providers: [TransactionService, MoneyAccountService, FileUploadService],
   controllers: [TransactionController],
 })
 export class TransactionModule {}

@@ -1,5 +1,5 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,6 +11,9 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthGuard } from './auth/auth.guard';
+import { TConfig } from './ts/config/config.union';
 
 @Module({
   imports: [
@@ -32,14 +35,25 @@ import { FileUploadModule } from './file-upload/file-upload.module';
       useFactory: async (configService: ConfigService) =>
         useFactoryReturn(configService),
     }),
-    AuthModule,
-    UsersModule,
-    FileUploadModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService<TConfig>) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('expiresIn'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
