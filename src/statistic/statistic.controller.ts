@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
 
 @Controller('statistic')
 export class StatisticController {
   constructor(private readonly statisticService: StatisticService) {}
 
-  @Get()
-  getStatisticByDate() {
-    return this.statisticService.getStatisticByDate();
+  @Post()
+  getStatisticByDate(@Body() body: { startDate: Date; endDate: Date }) {
+    return this.statisticService.getStatisticByDate(
+      body.startDate,
+      body.endDate,
+    );
   }
 }
