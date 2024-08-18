@@ -13,7 +13,7 @@ import { UsersModule } from './users/users.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './auth/auth.guard';
-import { TConfig } from './ts/config/config.union';
+import { TParamsEnvVar } from './ts/config/config.union';
 
 @Module({
   imports: [
@@ -37,7 +37,7 @@ import { TConfig } from './ts/config/config.union';
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService<TConfig>) => ({
+      useFactory: async (configService: ConfigService<TParamsEnvVar>) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: configService.get<string>('expiresIn'),

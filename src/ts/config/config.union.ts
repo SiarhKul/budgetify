@@ -8,4 +8,4 @@ export type TEnvVar = {
   JWT_SECRET: string;
 };
 
-export type TConfig = TParameters & TEnvVar;
+export type TParamsEnvVar = TParameters & TEnvVar;
