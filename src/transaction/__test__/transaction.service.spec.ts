@@ -80,7 +80,7 @@ describe('GIVEN TransactionService', () => {
     const result = await service.createTransaction(dto, []);
 
     expect(result._id).toBeInstanceOf(ObjectId);
-    expect(mockFileUploadService.uploadFiles).toHaveBeenCalled();
+    expect(mockFileUploadService.uploadFiles).not.toHaveBeenCalled();
     expect(mockMoneyAccountService.subtractOrSumBalance).toHaveBeenCalledWith(
       TRANSACTION_DTO_DUMMY.accountId,
       balance,

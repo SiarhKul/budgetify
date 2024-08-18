@@ -63,7 +63,7 @@ export class TransactionService {
 
   async createTransaction(
     transaction: TransactionDto,
-    files?: Express.Multer.File[],
+    files: Express.Multer.File[],
   ): Promise<TransactionDocument> {
     const amount: number =
       transaction.transactionType === TransactionType.INCOME
@@ -75,7 +75,9 @@ export class TransactionService {
       amount,
     );
 
-    const listIds = await this.fileUploadService.uploadFiles(files);
+    const listIds = files.length
+      ? await this.fileUploadService.uploadFiles(files)
+      : [];
 
     return await this.transactionModel.create({
       ...transaction,
