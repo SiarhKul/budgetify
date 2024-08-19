@@ -23,8 +23,14 @@ export class StatisticService {
       {
         $group: {
           _id: '$categories',
-
           totalAmount: { $sum: '$amount' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id',
+          totalAmount: 1,
         },
       },
     ]);
