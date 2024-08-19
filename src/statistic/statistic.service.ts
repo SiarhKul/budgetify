@@ -9,14 +9,24 @@ export class StatisticService {
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
   ) {}
+
   getStatisticByDate(startDate: Date, endDate: Date) {
-    console.log('startDate', startDate);
-    console.log('endDate', endDate);
-    return this.transactionModel.find({
-      paymentDate: {
-        $gte: startDate,
-        $lte: endDate,
+    return this.transactionModel.aggregate([
+      {
+        $match: {
+          paymentDate: {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+          },
+        },
       },
-    });
+      {
+        $group: {
+          _id: '$categories',
+
+          totalAmount: { $sum: '$amount' },
+        },
+      },
+    ]);
   }
 }
