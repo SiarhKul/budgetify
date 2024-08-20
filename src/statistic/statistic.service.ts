@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from '../schemas/transaction.schema';
-import { Aggregate, Model } from 'mongoose';
-import { CategoriesStatistic } from '../ts/statistic/statistic.interface';
+import { Model } from 'mongoose';
+import {
+  CategoriesStatistic,
+  CategorizedAmountsUnder,
+} from '../ts/statistic/statistic.interface';
 
 @Injectable()
 export class StatisticService {
@@ -11,11 +14,11 @@ export class StatisticService {
     private readonly transactionModel: Model<Transaction>,
   ) {}
 
-  getStatisticByDate(
+  async getStatisticByDate(
     startDate: Date,
     endDate: Date,
-  ): Promise<CategoriesStatistic[]> {
-    return this.transactionModel
+  ): Promise<CategorizedAmountsUnder> {
+    const selectedTransactionByDate = await this.transactionModel
       .aggregate([
         {
           $match: {
@@ -26,19 +29,38 @@ export class StatisticService {
           },
         },
         {
-          $group: {
-            _id: '$categories',
-            totalAmount: { $sum: '$amount' },
+          $sort: {
+            paymentDate: 1,
           },
         },
         {
           $project: {
-            _id: 0,
-            category: '$_id',
-            totalAmount: 1,
+            _id: 1,
+            category: '$categories',
+            amount: 1,
           },
         },
       ])
       .exec();
+
+    return this.categorizedAmountsUnder(selectedTransactionByDate);
+  }
+
+  private categorizedAmountsUnder(
+    selectedTransactionByDate: CategoriesStatistic[],
+  ): CategorizedAmountsUnder {
+    const reduce = <CategorizedAmountsUnder>selectedTransactionByDate.reduce(
+      (acc, { amount, category }) => {
+        acc.sum += amount;
+
+        if (acc.sum < 200) {
+          acc[category] = (acc[category] || 0) + amount;
+        }
+
+        return acc;
+      },
+      { sum: 0 },
+    );
+    return reduce;
   }
 }

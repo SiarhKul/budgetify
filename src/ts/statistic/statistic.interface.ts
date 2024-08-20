@@ -1,4 +1,13 @@
+import { ObjectId } from 'mongodb';
+import { Categories } from '../transactons/transactions.enums';
+
 export interface CategoriesStatistic {
-  name: string;
-  value: number;
+  _id: ObjectId;
+  amount: number;
+  category: string;
+}
+
+export interface CategorizedAmountsUnder
+  extends Record<Categories, number | undefined> {
+  sum: number;
 }
