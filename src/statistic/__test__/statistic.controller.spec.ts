@@ -8,7 +8,7 @@ const mockStatisticService = {
   getStatisticByDate: jest.fn(),
 };
 
-describe('StatisticController', () => {
+describe('GIVEN StatisticController', () => {
   let controller: StatisticController;
   let service: StatisticService;
 
@@ -27,7 +27,7 @@ describe('StatisticController', () => {
     service = module.get<StatisticService>(StatisticService);
   });
 
-  it('returns categorized amounts under 200', async () => {
+  it('SHOULD controller be called with correct arguments', async () => {
     const id = new ObjectId().toHexString();
     const body: GetStatisticByDateDto = {
       startDate: new Date(),
