@@ -6,6 +6,7 @@ import {
   CategoriesStatistic,
   CategorizedAmountsUnder,
 } from '../ts/statistic/statistic.interface';
+import { TransactionType } from '../ts/transactons/transactions.enums';
 
 @Injectable()
 export class StatisticService {
@@ -17,11 +18,15 @@ export class StatisticService {
   async getStatisticByDate(
     startDate: Date,
     endDate: Date,
+    totalExpenses: number,
+    id: string,
   ): Promise<CategorizedAmountsUnder> {
     const selectedTransactionByDate = await this.transactionModel
       .aggregate([
         {
           $match: {
+            transactionType: TransactionType.EXPENSES,
+            accountId: id,
             paymentDate: {
               $gte: new Date(startDate),
               $lte: new Date(endDate),
@@ -36,31 +41,36 @@ export class StatisticService {
         {
           $project: {
             _id: 1,
-            category: '$categories',
+            category: { $toLower: '$categories' },
             amount: 1,
           },
         },
       ])
       .exec();
 
-    return this.categorizedAmountsUnder(selectedTransactionByDate);
+    return this.categorizedAmountsUnder(
+      selectedTransactionByDate,
+      totalExpenses,
+    );
   }
 
   private categorizedAmountsUnder(
     selectedTransactionByDate: CategoriesStatistic[],
+    totalExpenses: number,
   ): CategorizedAmountsUnder {
-    const reduce = <CategorizedAmountsUnder>selectedTransactionByDate.reduce(
-      (acc, { amount, category }) => {
-        acc.sum += amount;
+    const result = { sum: 0 };
 
-        if (acc.sum < 200) {
-          acc[category] = (acc[category] || 0) + amount;
-        }
+    for (const { amount, category } of selectedTransactionByDate) {
+      result.sum += amount;
 
-        return acc;
-      },
-      { sum: 0 },
-    );
-    return reduce;
+      if (result.sum >= totalExpenses) {
+        result.sum = result.sum - amount;
+        break;
+      }
+
+      result[category] = (result[category] || 0) + amount;
+    }
+
+    return <CategorizedAmountsUnder>result;
   }
 }
