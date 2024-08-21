@@ -12,6 +12,7 @@ import { TransactionDto } from '../dto/transaction.dto';
 import { MoneyAccount } from '../../schemas/money-account.schema';
 import { TransactionType } from '../../ts/transactons/transactions.enums';
 import { MoneyAccountService } from '../../money-account/money-account.service';
+import { FileUploadService } from '../../file-upload/file-upload.service';
 
 type TMockTransactionModel = {
   [K in keyof typeof TransactionModel]?: jest.Mock;
@@ -33,6 +34,9 @@ const mockMoneyAccountService: Partial<MoneyAccountService> = {
   subtractOrSumBalance: jest.fn().mockResolvedValue(new MoneyAccount()),
 };
 
+const mockFileUploadService = {
+  uploadFiles: jest.fn(),
+};
 describe('GIVEN TransactionService', () => {
   let service: TransactionService;
 
@@ -47,6 +51,10 @@ describe('GIVEN TransactionService', () => {
         {
           provide: MoneyAccountService,
           useValue: mockMoneyAccountService,
+        },
+        {
+          provide: FileUploadService,
+          useValue: mockFileUploadService,
         },
       ],
     }).compile();
@@ -69,10 +77,10 @@ describe('GIVEN TransactionService', () => {
       testDescription: 'SHOULD decrease balance',
     },
   ])('$testDescription', async ({ balance, dto }) => {
-    const result = await service.createTransaction(dto);
+    const result = await service.createTransaction(dto, []);
 
     expect(result._id).toBeInstanceOf(ObjectId);
-
+    expect(mockFileUploadService.uploadFiles).not.toHaveBeenCalled();
     expect(mockMoneyAccountService.subtractOrSumBalance).toHaveBeenCalledWith(
       TRANSACTION_DTO_DUMMY.accountId,
       balance,

@@ -1,15 +1,45 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  ParseFilePipeBuilder,
+  Post,
+  Put,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionService } from './transaction.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { TransactionDocument } from '../schemas/transaction.schema';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 
   @Post()
-  create(@Body() transaction: TransactionDto) {
-    return this.transactionService.createTransaction(transaction);
+  @UseInterceptors(AnyFilesInterceptor())
+  create(
+    @Body() transaction: TransactionDto,
+    @UploadedFiles(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /jpeg|png/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 1000 * 1024, // 1MB
+        })
+        .build({
+          fileIsRequired: false,
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    files: Express.Multer.File[],
+  ): Promise<TransactionDocument> {
+    return this.transactionService.createTransaction(transaction, files);
   }
 
   @Delete(':id')
@@ -18,7 +48,7 @@ export class TransactionController {
   }
 
   @Get()
-  getAllTransactions() {
+  getAllTransactions(): Promise<TransactionDocument[]> {
     return this.transactionService.getAllTransactions();
   }
 
@@ -26,7 +56,14 @@ export class TransactionController {
   update(
     @ParamMongoObjectId('id') id: string,
     @Body() transaction: TransactionDto,
-  ) {
+  ): Promise<TransactionDocument> {
     return this.transactionService.updateTransaction(id, transaction);
+  }
+
+  @Get(':id')
+  getTransactionById(
+    @ParamMongoObjectId('id') id: string,
+  ): Promise<TransactionDocument> {
+    return this.transactionService.getTransactionById(id);
   }
 }

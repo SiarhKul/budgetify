@@ -10,7 +10,10 @@ import { MoneyAccountModule } from './money-account/money-account.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './auth/auth.guard';
+import { TParamsEnvVar } from './ts/config/config.union';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { AuthGuard } from './auth/auth.guard';
     TransactionModule,
     PiggyBankModule,
     SubscriptionModule,
+    AuthModule,
+    UsersModule,
+    FileUploadModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
@@ -29,8 +35,16 @@ import { AuthGuard } from './auth/auth.guard';
       useFactory: async (configService: ConfigService) =>
         useFactoryReturn(configService),
     }),
-    AuthModule,
-    UsersModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService<TParamsEnvVar>) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('expiresIn'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     {

@@ -8,6 +8,8 @@ import {
   MoneyAccountSchema,
 } from '../schemas/money-account.schema';
 import { MoneyAccountService } from '../money-account/money-account.service';
+import { FileUpload, FileUploadSchema } from '../schemas/file-upload.schema';
+import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Module({
   imports: [
@@ -20,9 +22,13 @@ import { MoneyAccountService } from '../money-account/money-account.service';
         name: MoneyAccount.name,
         schema: MoneyAccountSchema,
       },
+      {
+        name: FileUpload.name,
+        schema: FileUploadSchema,
+      },
     ]),
   ],
-  providers: [TransactionService, MoneyAccountService],
+  providers: [TransactionService, MoneyAccountService, FileUploadService],
   controllers: [TransactionController],
 })
 export class TransactionModule {}

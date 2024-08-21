@@ -10,6 +10,7 @@ import {
   TransactionType,
 } from '../../ts/transactons/transactions.enums';
 import { IsTypeOfDate } from '../../decorators/IsTypeOfDate';
+import { Transform } from 'class-transformer';
 
 export class TransactionDto {
   @IsEnum(TransactionType, {
@@ -28,6 +29,7 @@ export class TransactionDto {
   categories: Categories;
 
   @IsPositive()
+  @Transform(({ value }) => parseFloat(value))
   amount: number;
 
   @IsTypeOfDate()

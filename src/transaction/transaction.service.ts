@@ -4,10 +4,11 @@ import {
   Transaction,
   TransactionDocument,
 } from '../schemas/transaction.schema';
-import { Model, Types } from 'mongoose';
+import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { MoneyAccountService } from '../money-account/money-account.service';
+import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Injectable()
 export class TransactionService {
@@ -16,29 +17,17 @@ export class TransactionService {
     private readonly transactionModel: Model<Transaction>,
 
     private readonly accountService: MoneyAccountService,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async createTransaction(
-    transaction: TransactionDto,
-  ): Promise<TransactionDocument> {
-    const amount =
-      transaction.transactionType === TransactionType.INCOME
-        ? transaction.amount
-        : -transaction.amount;
-
-    await this.accountService.subtractOrSumBalance(
-      transaction.accountId,
-      amount,
-    );
-
-    return this.transactionModel.create(transaction);
-  }
-
-  async getAllTransactions() {
+  async getAllTransactions(): Promise<TransactionDocument[]> {
     return this.transactionModel.find();
   }
 
-  async updateTransaction(id: string, transaction: TransactionDto) {
+  async updateTransaction(
+    id: string,
+    transaction: TransactionDto,
+  ): Promise<TransactionDocument> {
     const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
       id,
       transaction,
@@ -54,7 +43,9 @@ export class TransactionService {
     return updatedTransaction;
   }
 
-  async deleteTransaction(id: string): Promise<{ _id: Types.ObjectId }> {
+  async deleteTransaction(
+    id: string,
+  ): Promise<FlattenMaps<Transaction> & { _id: Types.ObjectId }> {
     const deletedTransaction = await this.transactionModel.findByIdAndDelete(
       id,
       {
@@ -68,5 +59,41 @@ export class TransactionService {
     }
 
     return deletedTransaction;
+  }
+
+  async createTransaction(
+    transaction: TransactionDto,
+    files: Express.Multer.File[],
+  ): Promise<TransactionDocument> {
+    const amount: number =
+      transaction.transactionType === TransactionType.INCOME
+        ? transaction.amount
+        : -transaction.amount;
+
+    await this.accountService.subtractOrSumBalance(
+      transaction.accountId,
+      amount,
+    );
+
+    const listIds = files.length
+      ? await this.fileUploadService.uploadFiles(files)
+      : [];
+
+    return await this.transactionModel.create({
+      ...transaction,
+      uploadedFiles: listIds,
+    });
+  }
+
+  async getTransactionById(id: string): Promise<TransactionDocument> {
+    const transaction = await this.transactionModel
+      .findById(id)
+      .populate('uploadedFiles', '-buffer -encoding');
+
+    if (!transaction) {
+      throw new NotFoundException('No transaction found with the given id');
+    }
+
+    return transaction;
   }
 }
