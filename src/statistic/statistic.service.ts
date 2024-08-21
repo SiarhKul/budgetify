@@ -19,14 +19,14 @@ export class StatisticService {
     startDate: Date,
     endDate: Date,
     totalExpenses: number,
-    id: string,
+    accountId: string,
   ): Promise<CategorizedAmountsUnder> {
-    const selectedTransactionByDate = await this.transactionModel
-      .aggregate([
+    const selectedTransactionByDate: CategoriesStatistic[] =
+      await this.transactionModel.aggregate([
         {
           $match: {
             transactionType: TransactionType.EXPENSES,
-            accountId: id,
+            accountId: accountId,
             paymentDate: {
               $gte: new Date(startDate),
               $lte: new Date(endDate),
@@ -45,8 +45,7 @@ export class StatisticService {
             amount: 1,
           },
         },
-      ])
-      .exec();
+      ]);
 
     return this.categorizedAmountsUnder(
       selectedTransactionByDate,
@@ -58,7 +57,7 @@ export class StatisticService {
     selectedTransactionByDate: CategoriesStatistic[],
     totalExpenses: number,
   ): CategorizedAmountsUnder {
-    const result = { sum: 0 };
+    const result = { sum: 0, totalExpenses };
 
     for (const { amount, category } of selectedTransactionByDate) {
       result.sum += amount;

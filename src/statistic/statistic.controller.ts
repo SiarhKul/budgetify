@@ -11,14 +11,14 @@ export class StatisticController {
   @Post('category/:id')
   @HttpCode(HttpStatus.OK)
   getStatisticByDate(
-    @ParamMongoObjectId() id: string,
+    @ParamMongoObjectId() accountId: string,
     @Body() body: GetStatisticByDateDto,
   ): Promise<CategorizedAmountsUnder> {
     return this.statisticService.getStatisticByDate(
       body.startDate,
       body.endDate,
       body.totalExpenses,
-      id,
+      accountId,
     );
   }
 }
