@@ -132,6 +132,26 @@ export class StatisticService {
           total: 1,
           income: 1,
           expenses: 1,
+          economy: {
+            $subtract: ['$income', '$expenses'],
+          },
+          savingsPercentage: {
+            $cond: {
+              if: { $eq: ['$income', 0] },
+              then: null,
+              else: {
+                $multiply: [
+                  {
+                    $divide: [
+                      { $subtract: ['$income', '$expenses'] },
+                      '$income',
+                    ],
+                  },
+                  100,
+                ],
+              },
+            },
+          },
         },
       },
     ]);
