@@ -98,8 +98,8 @@ export class StatisticService {
         $group: {
           _id: {
             $dateToString: {
-              format: '%B-%Y',
               date: '$paymentDate',
+              format: '%B-%Y',
             },
           },
           income: {
