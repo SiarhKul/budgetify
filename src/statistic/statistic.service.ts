@@ -99,10 +99,10 @@ export class StatisticService {
       {
         $project: {
           _id: 0,
-          month: '$_id',
           total: 1,
           income: 1,
           expenses: 1,
+          month: '$_id',
           economy: {
             $subtract: ['$income', '$expenses'],
           },
@@ -122,6 +122,23 @@ export class StatisticService {
               2,
             ],
           },
+        },
+      },
+      {
+        $addFields: {
+          sortDate: {
+            $dateFromString: {
+              dateString: { $concat: ['01-', '$month'] },
+            },
+          },
+        },
+      },
+      {
+        $sort: { sortDate: 1 },
+      },
+      {
+        $project: {
+          sortDate: 0,
         },
       },
     ]);

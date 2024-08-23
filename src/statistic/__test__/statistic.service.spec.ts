@@ -162,6 +162,23 @@ describe('GIVEN StatisticService', () => {
           },
         },
       },
+      {
+        $addFields: {
+          sortDate: {
+            $dateFromString: {
+              dateString: { $concat: ['01-', '$month'] },
+            },
+          },
+        },
+      },
+      {
+        $sort: { sortDate: 1 },
+      },
+      {
+        $project: {
+          sortDate: 0,
+        },
+      },
     ]);
   });
 });
