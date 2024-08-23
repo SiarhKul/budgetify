@@ -1,30 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionController } from './subscription.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import {
-  Subscription,
-  SubscriptionSchema,
-} from '../schemas/subscription.schema';
-import {
-  MoneyAccount,
-  MoneyAccountSchema,
-} from '../schemas/money-account.schema';
 import { MoneyAccountService } from '../money-account/money-account.service';
+import { SchemasModule } from '../schemas/schemas.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: Subscription.name,
-        schema: SubscriptionSchema,
-      },
-      {
-        name: MoneyAccount.name,
-        schema: MoneyAccountSchema,
-      },
-    ]),
-  ],
+  imports: [SchemasModule],
   controllers: [SubscriptionController],
   providers: [SubscriptionService, MoneyAccountService],
 })

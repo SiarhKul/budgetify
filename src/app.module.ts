@@ -14,6 +14,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './auth/auth.guard';
 import { TParamsEnvVar } from './ts/config/config.union';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { TParamsEnvVar } from './ts/config/config.union';
       }),
       inject: [ConfigService],
     }),
+    StatisticModule,
   ],
   providers: [
     {
