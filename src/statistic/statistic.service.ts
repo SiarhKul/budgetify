@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import {
   CategoriesStatistic,
   CategorizedAmountsUnder,
+  IMonthlyStatistic,
 } from '../ts/statistic/statistic.interface';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
@@ -54,7 +55,9 @@ export class StatisticService {
     );
   }
 
-  async retrieveMonthlyStatistic(body: RetrieveMonthlyStatisticDto) {
+  retrieveMonthlyStatistic(
+    body: RetrieveMonthlyStatisticDto,
+  ): Promise<IMonthlyStatistic[]> {
     return this.transactionModel.aggregate([
       {
         $match: {

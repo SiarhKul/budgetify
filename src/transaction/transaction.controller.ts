@@ -66,4 +66,9 @@ export class TransactionController {
   ): Promise<TransactionDocument> {
     return this.transactionService.getTransactionById(id);
   }
+
+  @Post('search')
+  findTransactionByName(@Body() body: { searchTerm: string }) {
+    return this.transactionService.findTransactionByName(body.searchTerm);
+  }
 }

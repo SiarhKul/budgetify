@@ -12,3 +12,12 @@ export interface CategorizedAmountsUnder
   sum: number;
   totalExpenses: number;
 }
+
+export interface IMonthlyStatistic {
+  income: number;
+  expenses: number;
+  total: number;
+  month: string;
+  economy: number;
+  savingsPercentage: number;
+}

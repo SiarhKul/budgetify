@@ -2,7 +2,10 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
 import { GetStatisticByDateDto } from './dto/get-statistic-by-date.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
-import { CategorizedAmountsUnder } from '../ts/statistic/statistic.interface';
+import {
+  CategorizedAmountsUnder,
+  IMonthlyStatistic,
+} from '../ts/statistic/statistic.interface';
 import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
 
 @Controller('statistic')
@@ -25,7 +28,9 @@ export class StatisticController {
 
   @Post('monthly')
   @HttpCode(HttpStatus.OK)
-  retrieveMonthlyStatistic(@Body() body: RetrieveMonthlyStatisticDto) {
+  retrieveMonthlyStatistic(
+    @Body() body: RetrieveMonthlyStatisticDto,
+  ): Promise<IMonthlyStatistic[]> {
     return this.statisticService.retrieveMonthlyStatistic(body);
   }
 }
