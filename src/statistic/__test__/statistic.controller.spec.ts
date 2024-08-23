@@ -29,31 +29,31 @@ describe('GIVEN StatisticController', () => {
   });
 
   it('SHOULD getStatisticByDate be called with correct arguments', async () => {
-    const body: GetStatisticByDateDto = {
+    const DUMMY_BODY: GetStatisticByDateDto = {
       startDate: new Date(),
       endDate: new Date(),
       totalExpenses: 150,
     };
 
-    await controller.getStatisticByDate(ACCOUNT_ID_DUMMY, body);
+    await controller.getStatisticByDate(ACCOUNT_ID_DUMMY, DUMMY_BODY);
 
     expect(service.getStatisticByDate).toHaveBeenCalledWith(
-      body.startDate,
-      body.endDate,
-      body.totalExpenses,
+      DUMMY_BODY.startDate,
+      DUMMY_BODY.endDate,
+      DUMMY_BODY.totalExpenses,
       ACCOUNT_ID_DUMMY,
     );
   });
 
   it('SHOULD retrieveMonthlyStatistic be called with correct arguments', async () => {
-    const body = {
+    const DUMMY_BODY = {
       startDate: new Date(),
       endDate: new Date(),
       accountId: ACCOUNT_ID_DUMMY,
     };
 
-    await controller.retrieveMonthlyStatistic(body);
+    await controller.retrieveMonthlyStatistic(DUMMY_BODY);
 
-    expect(service.retrieveMonthlyStatistic).toHaveBeenCalledWith(body);
+    expect(service.retrieveMonthlyStatistic).toHaveBeenCalledWith(DUMMY_BODY);
   });
 });
