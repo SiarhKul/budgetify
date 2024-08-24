@@ -26,6 +26,6 @@ export class StatisticController {
   @Post('monthly')
   @HttpCode(HttpStatus.OK)
   retrieveMonthlyStatistic(@Body() body: RetrieveMonthlyStatisticDto) {
-    return this.statisticService.retrieveMonthlyStatistic(body);
+    return this.statisticService.retrieveStatisticsByDateRange(body);
   }
 }

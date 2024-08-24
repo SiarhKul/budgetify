@@ -54,7 +54,7 @@ export class StatisticService {
     );
   }
 
-  async retrieveMonthlyStatistic(body: RetrieveMonthlyStatisticDto) {
+  async retrieveStatisticsByDateRange(body: RetrieveMonthlyStatisticDto) {
     return this.transactionModel.aggregate([
       {
         $match: {
