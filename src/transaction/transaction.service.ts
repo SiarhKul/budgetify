@@ -6,10 +6,7 @@ import {
 } from '../schemas/transaction.schema';
 import { FlattenMaps, Model, Types } from 'mongoose';
 import { TransactionDto } from './dto/transaction.dto';
-import {
-  Categories,
-  TransactionType,
-} from '../ts/transactons/transactions.enums';
+import { TransactionType } from '../ts/transactons/transactions.enums';
 import { MoneyAccountService } from '../money-account/money-account.service';
 import { FileUploadService } from '../file-upload/file-upload.service';
 import { IFinedTransaction } from '../ts/transactons/transactions.interfaces';
@@ -100,19 +97,7 @@ export class TransactionService {
 
     return transaction;
   }
-  /*[
-    {
-        "_id": "66b8fdc31c56a534fa023bbc",
-        "transactionType": "Income",
-        "title": "any",
-        "categories": "Salary",
-        "amount": 8,
-        "paymentDate": "2012-01-01T00:00:00.000Z",
-        "payee": "payee2",
-        "description": "description2",
-        "accountId": "66abf6a97bf3e2f09f4f843b"
-    }
-]*/
+
   async findTransactionByName(
     searchTerm: string,
   ): Promise<IFinedTransaction[]> {
