@@ -15,7 +15,7 @@ import { TransactionService } from './transaction.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { TransactionDocument } from '../schemas/transaction.schema';
-import { IFinedTransaction } from '../ts/transactons/transactions.interfaces';
+import { IFindTransaction } from '../ts/transactons/transactions.interfaces';
 
 @Controller('transaction')
 export class TransactionController {
@@ -71,7 +71,7 @@ export class TransactionController {
   @Post('search')
   findTransactionByName(
     @Body() body: { searchTerm: string },
-  ): Promise<IFinedTransaction[]> {
+  ): Promise<IFindTransaction[]> {
     return this.transactionService.findTransactionByName(body.searchTerm);
   }
 }

@@ -9,7 +9,7 @@ import { TransactionDto } from './dto/transaction.dto';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { MoneyAccountService } from '../money-account/money-account.service';
 import { FileUploadService } from '../file-upload/file-upload.service';
-import { IFinedTransaction } from '../ts/transactons/transactions.interfaces';
+import { IFindTransaction } from '../ts/transactons/transactions.interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -98,9 +98,7 @@ export class TransactionService {
     return transaction;
   }
 
-  async findTransactionByName(
-    searchTerm: string,
-  ): Promise<IFinedTransaction[]> {
+  async findTransactionByName(searchTerm: string): Promise<IFindTransaction[]> {
     return this.transactionModel
       .find({
         title: { $regex: searchTerm, $options: 'i' },
