@@ -3,6 +3,7 @@ import { StatisticService } from './statistic.service';
 import { GetStatisticByDateDto } from './dto/get-statistic-by-date.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { CategorizedAmountsUnder } from '../ts/statistic/statistic.interface';
+import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
 
 @Controller('statistic')
 export class StatisticController {
@@ -20,5 +21,11 @@ export class StatisticController {
       body.totalExpenses,
       accountId,
     );
+  }
+
+  @Post('monthly')
+  @HttpCode(HttpStatus.OK)
+  retrieveMonthlyStatistic(@Body() body: RetrieveMonthlyStatisticDto) {
+    return this.statisticService.retrieveStatisticsByDateRange(body);
   }
 }

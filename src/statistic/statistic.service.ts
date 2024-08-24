@@ -7,6 +7,7 @@ import {
   CategorizedAmountsUnder,
 } from '../ts/statistic/statistic.interface';
 import { TransactionType } from '../ts/transactons/transactions.enums';
+import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
 
 @Injectable()
 export class StatisticService {
@@ -51,6 +52,96 @@ export class StatisticService {
       selectedTransactionByDate,
       totalExpenses,
     );
+  }
+
+  async retrieveStatisticsByDateRange(body: RetrieveMonthlyStatisticDto) {
+    return this.transactionModel.aggregate([
+      {
+        $match: {
+          accountId: body.accountId,
+          paymentDate: {
+            $gte: new Date(body.startDate),
+            $lte: new Date(body.endDate),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              date: '$paymentDate',
+              format: '%B-%Y',
+            },
+          },
+          income: {
+            $sum: {
+              $cond: {
+                if: { $eq: ['$transactionType', TransactionType.INCOME] },
+                then: '$amount',
+                else: 0,
+              },
+            },
+          },
+          expenses: {
+            $sum: {
+              $cond: {
+                if: { $eq: ['$transactionType', TransactionType.EXPENSES] },
+                then: '$amount',
+                else: 0,
+              },
+            },
+          },
+          total: {
+            $sum: '$amount',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          total: 1,
+          income: 1,
+          expenses: 1,
+          month: '$_id',
+          economy: {
+            $subtract: ['$income', '$expenses'],
+          },
+          savingsPercentage: {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      { $subtract: ['$income', '$expenses'] },
+                      '$income',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              2,
+            ],
+          },
+        },
+      },
+      {
+        $addFields: {
+          sortDate: {
+            $dateFromString: {
+              dateString: { $concat: ['01-', '$month'] },
+            },
+          },
+        },
+      },
+      {
+        $sort: { sortDate: 1 },
+      },
+      {
+        $project: {
+          sortDate: 0,
+        },
+      },
+    ]);
   }
 
   private categorizedAmountsUnder(

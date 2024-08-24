@@ -8,7 +8,11 @@ import {
   ACCOUNT_ID_DUMMY,
   TransactionModel,
 } from '../../helpers/tests/doubles';
-import { Categories } from '../../ts/transactons/transactions.enums';
+import {
+  Categories,
+  TransactionType,
+} from '../../ts/transactons/transactions.enums';
+import { RetrieveMonthlyStatisticDto } from '../dto/retrieve-monthly-statistic.dto';
 
 type TMockTransactionModel = {
   [K in keyof typeof TransactionModel]?: jest.Mock;
@@ -75,5 +79,106 @@ describe('GIVEN StatisticService', () => {
 
     //Assert
     expect(result).toEqual({ sum: 0, totalExpenses: 200 });
+  });
+
+  it('SHOULD be called with  the correct arguments', async () => {
+    //Arrange
+    const dto: RetrieveMonthlyStatisticDto = {
+      startDate: new Date(),
+      endDate: new Date(),
+      accountId: ACCOUNT_ID_DUMMY,
+    };
+
+    //Act
+    await service.retrieveStatisticsByDateRange(dto);
+
+    //Assert
+    expect(mockTransactionModel.aggregate).toBeCalledWith([
+      {
+        $match: {
+          accountId: dto.accountId,
+          paymentDate: {
+            $gte: dto.startDate,
+            $lte: dto.endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              date: '$paymentDate',
+              format: '%B-%Y',
+            },
+          },
+          income: {
+            $sum: {
+              $cond: {
+                if: { $eq: ['$transactionType', TransactionType.INCOME] },
+                then: '$amount',
+                else: 0,
+              },
+            },
+          },
+          expenses: {
+            $sum: {
+              $cond: {
+                if: { $eq: ['$transactionType', TransactionType.EXPENSES] },
+                then: '$amount',
+                else: 0,
+              },
+            },
+          },
+          total: {
+            $sum: '$amount',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: '$_id',
+          total: 1,
+          income: 1,
+          expenses: 1,
+          economy: {
+            $subtract: ['$income', '$expenses'],
+          },
+          savingsPercentage: {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      { $subtract: ['$income', '$expenses'] },
+                      '$income',
+                    ],
+                  },
+                  100,
+                ],
+              },
+              2,
+            ],
+          },
+        },
+      },
+      {
+        $addFields: {
+          sortDate: {
+            $dateFromString: {
+              dateString: { $concat: ['01-', '$month'] },
+            },
+          },
+        },
+      },
+      {
+        $sort: { sortDate: 1 },
+      },
+      {
+        $project: {
+          sortDate: 0,
+        },
+      },
+    ]);
   });
 });
