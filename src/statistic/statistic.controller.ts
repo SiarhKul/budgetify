@@ -31,6 +31,6 @@ export class StatisticController {
   retrieveMonthlyStatistic(
     @Body() body: RetrieveMonthlyStatisticDto,
   ): Promise<IMonthlyStatistic[]> {
-    return this.statisticService.retrieveMonthlyStatistic(body);
+    return this.statisticService.retrieveStatisticsByDateRange(body);
   }
 }

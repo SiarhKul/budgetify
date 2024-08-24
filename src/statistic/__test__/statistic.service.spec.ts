@@ -90,7 +90,7 @@ describe('GIVEN StatisticService', () => {
     };
 
     //Act
-    await service.retrieveMonthlyStatistic(dto);
+    await service.retrieveStatisticsByDateRange(dto);
 
     //Assert
     expect(mockTransactionModel.aggregate).toBeCalledWith([

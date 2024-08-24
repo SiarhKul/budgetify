@@ -55,7 +55,7 @@ export class StatisticService {
     );
   }
 
-  retrieveMonthlyStatistic(
+  retrieveStatisticsByDateRange(
     body: RetrieveMonthlyStatisticDto,
   ): Promise<IMonthlyStatistic[]> {
     return this.transactionModel.aggregate([

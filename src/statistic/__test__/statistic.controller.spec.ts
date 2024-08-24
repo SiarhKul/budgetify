@@ -54,6 +54,8 @@ describe('GIVEN StatisticController', () => {
 
     await controller.retrieveMonthlyStatistic(DUMMY_BODY);
 
-    expect(service.retrieveMonthlyStatistic).toHaveBeenCalledWith(DUMMY_BODY);
+    expect(service.retrieveStatisticsByDateRange).toHaveBeenCalledWith(
+      DUMMY_BODY,
+    );
   });
 });
