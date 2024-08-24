@@ -98,7 +98,9 @@ export class TransactionService {
     return transaction;
   }
 
-  async findTransactionByName(searchTerm: string): Promise<IFindTransaction[]> {
+  async findTransactionByTitle(
+    searchTerm: string,
+  ): Promise<IFindTransaction[]> {
     return this.transactionModel
       .find({
         title: { $regex: searchTerm, $options: 'i' },

@@ -172,7 +172,7 @@ describe('GIVEN TransactionService', () => {
       }));
 
       // Act
-      await service.findTransactionByName(DUMMY_SEARCH_TERM);
+      await service.findTransactionByTitle(DUMMY_SEARCH_TERM);
 
       // Assert
       expect(mockTransactionModel.find).toHaveBeenCalledWith({

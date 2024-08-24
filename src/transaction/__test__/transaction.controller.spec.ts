@@ -18,7 +18,7 @@ const mockTransactionService: Partial<TransactionService> = {
   deleteTransaction: jest
     .fn()
     .mockImplementation((id: string) => new ObjectId(id)),
-  findTransactionByName: jest.fn().mockResolvedValue([]),
+  findTransactionByTitle: jest.fn().mockResolvedValue([]),
 };
 
 describe('GIVE TransactionController', () => {
@@ -58,7 +58,7 @@ describe('GIVE TransactionController', () => {
     const DUMMY_SEARCH_TERM = 'dummy_search_term';
     await controller.findTransactionByName({ searchTerm: DUMMY_SEARCH_TERM });
 
-    expect(mockTransactionService.findTransactionByName).toHaveBeenCalledWith(
+    expect(mockTransactionService.findTransactionByTitle).toHaveBeenCalledWith(
       DUMMY_SEARCH_TERM,
     );
   });

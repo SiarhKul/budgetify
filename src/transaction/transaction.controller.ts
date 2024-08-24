@@ -69,9 +69,9 @@ export class TransactionController {
   }
 
   @Post('search')
-  findTransactionByName(
+  findTransactionByTitle(
     @Body() body: { searchTerm: string },
   ): Promise<IFindTransaction[]> {
-    return this.transactionService.findTransactionByName(body.searchTerm);
+    return this.transactionService.findTransactionByTitle(body.searchTerm);
   }
 }

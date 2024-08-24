@@ -28,7 +28,7 @@ export class StatisticController {
 
   @Post('monthly')
   @HttpCode(HttpStatus.OK)
-  retrieveMonthlyStatistic(
+  retrieveStatisticsByDateRange(
     @Body() body: RetrieveMonthlyStatisticDto,
   ): Promise<IMonthlyStatistic[]> {
     return this.statisticService.retrieveStatisticsByDateRange(body);
