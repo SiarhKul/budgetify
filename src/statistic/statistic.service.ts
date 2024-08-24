@@ -5,10 +5,10 @@ import { Model } from 'mongoose';
 import {
   CategoriesStatistic,
   CategorizedAmountsUnder,
-  IMonthlyStatistic,
+  IStatisticsByDateRange,
 } from '../ts/statistic/statistic.interface';
 import { TransactionType } from '../ts/transactons/transactions.enums';
-import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
+import { StatisticsByDateRangeDto } from './dto/statistics-by-date-range.dto';
 
 @Injectable()
 export class StatisticService {
@@ -56,8 +56,8 @@ export class StatisticService {
   }
 
   retrieveStatisticsByDateRange(
-    body: RetrieveMonthlyStatisticDto,
-  ): Promise<IMonthlyStatistic[]> {
+    body: StatisticsByDateRangeDto,
+  ): Promise<IStatisticsByDateRange[]> {
     return this.transactionModel.aggregate([
       {
         $match: {

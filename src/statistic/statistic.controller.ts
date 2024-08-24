@@ -4,9 +4,9 @@ import { GetStatisticByDateDto } from './dto/get-statistic-by-date.dto';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import {
   CategorizedAmountsUnder,
-  IMonthlyStatistic,
+  IStatisticsByDateRange,
 } from '../ts/statistic/statistic.interface';
-import { RetrieveMonthlyStatisticDto } from './dto/retrieve-monthly-statistic.dto';
+import { StatisticsByDateRangeDto } from './dto/statistics-by-date-range.dto';
 
 @Controller('statistic')
 export class StatisticController {
@@ -29,8 +29,8 @@ export class StatisticController {
   @Post('monthly')
   @HttpCode(HttpStatus.OK)
   retrieveStatisticsByDateRange(
-    @Body() body: RetrieveMonthlyStatisticDto,
-  ): Promise<IMonthlyStatistic[]> {
+    @Body() body: StatisticsByDateRangeDto,
+  ): Promise<IStatisticsByDateRange[]> {
     return this.statisticService.retrieveStatisticsByDateRange(body);
   }
 }

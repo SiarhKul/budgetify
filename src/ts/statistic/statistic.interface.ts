@@ -13,7 +13,7 @@ export interface CategorizedAmountsUnder
   totalExpenses: number;
 }
 
-export interface IMonthlyStatistic {
+export interface IStatisticsByDateRange {
   income: number;
   expenses: number;
   total: number;
