@@ -12,7 +12,7 @@ import {
   Categories,
   TransactionType,
 } from '../../ts/transactons/transactions.enums';
-import { RetrieveMonthlyStatisticDto } from '../dto/retrieve-monthly-statistic.dto';
+import { StatisticsByDateRangeDto } from '../dto/statistics-by-date-range.dto';
 
 type TMockTransactionModel = {
   [K in keyof typeof TransactionModel]?: jest.Mock;
@@ -83,7 +83,7 @@ describe('GIVEN StatisticService', () => {
 
   it('SHOULD be called with  the correct arguments', async () => {
     //Arrange
-    const dto: RetrieveMonthlyStatisticDto = {
+    const dto: StatisticsByDateRangeDto = {
       startDate: new Date(),
       endDate: new Date(),
       accountId: ACCOUNT_ID_DUMMY,

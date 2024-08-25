@@ -1,7 +1,7 @@
 import { IsTypeOfDate } from '../../decorators/IsTypeOfDate';
 import { IsMongoObjectId } from '../../decorators/IsMongoObjectId';
 
-export class RetrieveMonthlyStatisticDto {
+export class StatisticsByDateRangeDto {
   @IsTypeOfDate()
   startDate: Date;
 

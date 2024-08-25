@@ -15,6 +15,8 @@ import { TransactionService } from './transaction.service';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { TransactionDocument } from '../schemas/transaction.schema';
+import { IFindTransaction } from '../ts/transactons/transactions.interfaces';
+import { SearchTermDto } from './dto/search-term.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -65,5 +67,12 @@ export class TransactionController {
     @ParamMongoObjectId('id') id: string,
   ): Promise<TransactionDocument> {
     return this.transactionService.getTransactionById(id);
+  }
+
+  @Post('search')
+  findTransactionByTitle(
+    @Body() body: SearchTermDto,
+  ): Promise<IFindTransaction[]> {
+    return this.transactionService.findTransactionByTitle(body.searchTerm);
   }
 }

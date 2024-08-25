@@ -6,7 +6,7 @@ import { ACCOUNT_ID_DUMMY } from '../../helpers/tests/doubles';
 
 const mockStatisticService = {
   getStatisticByDate: jest.fn(),
-  retrieveMonthlyStatistic: jest.fn(),
+  retrieveStatisticsByDateRange: jest.fn(),
 };
 
 describe('GIVEN StatisticController', () => {
@@ -52,7 +52,7 @@ describe('GIVEN StatisticController', () => {
       accountId: ACCOUNT_ID_DUMMY,
     };
 
-    await controller.retrieveMonthlyStatistic(DUMMY_BODY);
+    await controller.retrieveStatisticsByDateRange(DUMMY_BODY);
 
     expect(service.retrieveStatisticsByDateRange).toHaveBeenCalledWith(
       DUMMY_BODY,

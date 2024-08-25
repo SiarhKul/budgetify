@@ -10,7 +10,10 @@ import {
 import { ObjectId } from 'mongodb';
 import { TransactionDto } from '../dto/transaction.dto';
 import { MoneyAccount } from '../../schemas/money-account.schema';
-import { TransactionType } from '../../ts/transactons/transactions.enums';
+import {
+  Categories,
+  TransactionType,
+} from '../../ts/transactons/transactions.enums';
 import { MoneyAccountService } from '../../money-account/money-account.service';
 import { FileUploadService } from '../../file-upload/file-upload.service';
 
@@ -24,9 +27,7 @@ const mockTransactionModel: TMockTransactionModel = {
     .mockImplementation((transaction: TransactionDto) =>
       Promise.resolve(new TransactionModel(transaction)),
     ),
-  find: jest
-    .fn()
-    .mockResolvedValue([new TransactionModel(TRANSACTION_DTO_DUMMY)]),
+  find: jest.fn(),
   findByIdAndUpdate: jest.fn(),
 };
 
@@ -88,6 +89,10 @@ describe('GIVEN TransactionService', () => {
   });
 
   it('SHOULD return list of transactions', async () => {
+    mockTransactionModel.find = jest
+      .fn()
+      .mockResolvedValue([new TransactionModel(TRANSACTION_DTO_DUMMY)]);
+
     const transactions = await service.getAllTransactions();
     expect(transactions.length).toBeGreaterThan(0);
     expect(transactions[0]._id).toBeInstanceOf(ObjectId);
@@ -150,6 +155,30 @@ describe('GIVEN TransactionService', () => {
       await expect(
         service.updateTransaction('1', TRANSACTION_DTO_DUMMY),
       ).rejects.toThrow(NotFoundException);
+    });
+
+    it('SHOULD findTransactionByName be called with correct arguments', async () => {
+      // Arrange
+      const DUMMY_SEARCH_TERM = 'dummy_search_term';
+
+      const mockSelect = jest.fn().mockResolvedValue({
+        _id: '1',
+        title: 'test',
+        categories: Categories.RENT,
+      });
+
+      mockTransactionModel.find = jest.fn().mockImplementation(() => ({
+        select: mockSelect,
+      }));
+
+      // Act
+      await service.findTransactionByTitle(DUMMY_SEARCH_TERM);
+
+      // Assert
+      expect(mockTransactionModel.find).toHaveBeenCalledWith({
+        title: { $regex: DUMMY_SEARCH_TERM, $options: 'i' },
+      });
+      expect(mockSelect).toHaveBeenCalledWith('_id title categories');
     });
   });
 });
