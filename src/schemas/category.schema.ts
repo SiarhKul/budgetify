@@ -1,10 +1,13 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { TransactionType } from '../ts/transactons/transactions.enums';
 import { HydratedDocument } from 'mongoose';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
 export class Category {
+  @Prop({ required: true })
+  title: string;
+
   @Prop({
     required: true,
     unique: true,
@@ -12,6 +15,6 @@ export class Category {
     enum: TransactionType,
   })
   transactionType: TransactionType;
-  @Prop({ required: true })
-  title: string;
 }
+
+export const CategorySchema = SchemaFactory.createForClass(Category);
