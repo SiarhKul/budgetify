@@ -11,11 +11,17 @@ export class CategoryService {
     @InjectModel(Category.name)
     private readonly categoryModel: Model<Category>,
   ) {}
-
+  //todo: check uniqueness of category title
   async create(
     createCategoryDto: CreateCategoryDto,
+    userId: string,
   ): Promise<CategoryDocument> {
-    return await this.categoryModel.create(createCategoryDto);
+    const category: Category = {
+      ...createCategoryDto,
+      userId: userId,
+    };
+
+    return await this.categoryModel.create(category);
   }
 
   findAll() {

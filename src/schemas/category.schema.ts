@@ -4,18 +4,20 @@ import { HydratedDocument } from 'mongoose';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
-@Schema({ versionKey: false })
+@Schema()
 export class Category {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
 
   @Prop({
     required: true,
-    unique: true,
     type: String,
     enum: TransactionType,
   })
   transactionType: TransactionType;
+
+  @Prop({ required: true })
+  userId: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
