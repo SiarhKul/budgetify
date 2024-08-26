@@ -24,8 +24,8 @@ export class CategoryService {
     return await this.categoryModel.create(category);
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll(userId: string): Promise<CategoryDocument[]> {
+    return this.categoryModel.find({ userId: userId });
   }
 
   findOne(id: number) {
