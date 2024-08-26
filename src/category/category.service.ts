@@ -28,15 +28,21 @@ export class CategoryService {
     return this.categoryModel.find({ userId: userId });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(categoryId: string): Promise<CategoryDocument> {
+    return this.categoryModel.findById(categoryId);
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  //todo: check uniqueness of category title
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<CategoryDocument> {
+    return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {
+      new: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string): Promise<{ _id: string }> {
+    return this.categoryModel.findByIdAndDelete(id, { projection: { _id: 1 } });
   }
 }
