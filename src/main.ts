@@ -7,8 +7,8 @@ import { ExceptionsLoggerFilter } from './filters/exception-loger.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalFilters(new MongoExceptionFilter());
   app.useGlobalFilters(new ExceptionsLoggerFilter());
+  app.useGlobalFilters(new MongoExceptionFilter());
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port');

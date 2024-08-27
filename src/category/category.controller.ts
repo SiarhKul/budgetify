@@ -12,6 +12,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UserId } from '../decorators/UserId';
 import { CategoryDocument } from '../schemas/category.schema';
+import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 
 @Controller('category')
 export class CategoryController {
@@ -20,7 +21,7 @@ export class CategoryController {
   @Post()
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
-    @UserId() userId: any,
+    @UserId() userId: string,
   ): Promise<CategoryDocument> {
     return await this.categoryService.create(createCategoryDto, userId);
   }
@@ -31,20 +32,20 @@ export class CategoryController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@ParamMongoObjectId() id: string) {
     return this.categoryService.findOne(id);
   }
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @ParamMongoObjectId() id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryDocument> {
     return await this.categoryService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<{ _id: string }> {
+  remove(@ParamMongoObjectId() id: string): Promise<{ _id: string }> {
     return this.categoryService.remove(id);
   }
 }
