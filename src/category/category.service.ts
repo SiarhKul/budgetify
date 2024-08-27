@@ -11,7 +11,7 @@ export class CategoryService {
     @InjectModel(Category.name)
     private readonly categoryModel: Model<Category>,
   ) {}
-  //todo: check uniqueness of category title
+
   async create(
     createCategoryDto: CreateCategoryDto,
     userId: string,
@@ -32,7 +32,6 @@ export class CategoryService {
     return this.categoryModel.findById(categoryId);
   }
 
-  //todo: check uniqueness of category title
   async update(
     id: string,
     updateCategoryDto: UpdateCategoryDto,

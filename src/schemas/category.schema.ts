@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { TransactionType } from '../ts/transactons/transactions.enums';
 import { HydratedDocument } from 'mongoose';
+import { TransactionType } from '../ts/transactons/transactions.enums';
+import * as uniqueValidator from 'mongoose-unique-validator';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
@@ -10,14 +11,15 @@ export class Category {
   title: string;
 
   @Prop({
-    required: true,
     type: String,
-    enum: TransactionType,
+    required: true,
+    enum: Object.values(TransactionType),
   })
-  transactionType: TransactionType;
+  transactionType: string;
 
   @Prop({ required: true })
   userId: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
+CategorySchema.plugin(uniqueValidator);

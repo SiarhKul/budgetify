@@ -41,10 +41,7 @@ const schemas = MongooseModule.forFeature([
     name: Subscription.name,
     schema: SubscriptionSchema,
   },
-  {
-    name: Category.name,
-    schema: CategorySchema,
-  },
+  { name: Category.name, schema: CategorySchema },
 ]);
 
 @Module({
