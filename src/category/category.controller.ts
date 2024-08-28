@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -18,6 +18,21 @@ import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Get('/find-by-title')
+  findByTitle(@Query('title') title: string): Promise<CategoryDocument[]> {
+    return this.categoryService.findByTitle(title);
+  }
+
+  @Get(':id')
+  findOne(@ParamMongoObjectId() id: string): Promise<CategoryDocument> {
+    return this.categoryService.findOne(id);
+  }
+
+  @Get()
+  findAll(@UserId() userId: string): Promise<CategoryDocument[]> {
+    return this.categoryService.findAll(userId);
+  }
+
   @Post()
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
@@ -26,22 +41,12 @@ export class CategoryController {
     return await this.categoryService.create(createCategoryDto, userId);
   }
 
-  @Get()
-  findAll(@UserId() userId: string): Promise<CategoryDocument[]> {
-    return this.categoryService.findAll(userId);
-  }
-
-  @Get(':id')
-  findOne(@ParamMongoObjectId() id: string) {
-    return this.categoryService.findOne(id);
-  }
-
   @Patch(':id')
-  async update(
+  update(
     @ParamMongoObjectId() id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryDocument> {
-    return await this.categoryService.update(id, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')

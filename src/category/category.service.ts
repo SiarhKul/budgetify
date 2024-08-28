@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -29,7 +29,14 @@ export class CategoryService {
   }
 
   async findOne(categoryId: string): Promise<CategoryDocument> {
-    return this.categoryModel.findById(categoryId);
+    const findCategory: CategoryDocument | null =
+      await this.categoryModel.findById(categoryId);
+
+    if (!findCategory) {
+      throw new NotFoundException('Category not found');
+    }
+
+    return findCategory;
   }
 
   async update(
@@ -43,5 +50,11 @@ export class CategoryService {
 
   async remove(id: string): Promise<{ _id: string }> {
     return this.categoryModel.findByIdAndDelete(id, { projection: { _id: 1 } });
+  }
+
+  async findByTitle(title: string): Promise<CategoryDocument[]> {
+    return this.categoryModel.find({
+      title: { $regex: title, $options: 'i' },
+    });
   }
 }
