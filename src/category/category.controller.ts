@@ -13,24 +13,27 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UserId } from '../decorators/UserId';
 import { CategoryDocument } from '../schemas/category.schema';
 import { ParamMongoObjectId } from '../decorators/ParamMongoObjectId';
+import { SearchCriteriaCategoryDto } from './dto/search-criteria-category.dto';
 
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get('/find-by-title')
-  findByTitle(@Query('title') title: string): Promise<CategoryDocument[]> {
-    return this.categoryService.findByTitle(title);
-  }
-
-  @Get(':id')
-  findOne(@ParamMongoObjectId() id: string): Promise<CategoryDocument> {
-    return this.categoryService.findOne(id);
+  @Post('/search')
+  findByTitle(
+    @Body() searchCriteria: SearchCriteriaCategoryDto,
+  ): Promise<CategoryDocument[]> {
+    return this.categoryService.findByTitle(searchCriteria);
   }
 
   @Get()
   findAll(@UserId() userId: string): Promise<CategoryDocument[]> {
     return this.categoryService.findAll(userId);
+  }
+
+  @Get(':id')
+  findOne(@ParamMongoObjectId() id: string): Promise<CategoryDocument> {
+    return this.categoryService.findOne(id);
   }
 
   @Post()

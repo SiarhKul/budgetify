@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from '../schemas/category.schema';
 import { Model } from 'mongoose';
+import { SearchCriteriaCategoryDto } from './dto/search-criteria-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -52,9 +53,11 @@ export class CategoryService {
     return this.categoryModel.findByIdAndDelete(id, { projection: { _id: 1 } });
   }
 
-  async findByTitle(title: string): Promise<CategoryDocument[]> {
+  async findByTitle(
+    searchCriteria: SearchCriteriaCategoryDto,
+  ): Promise<CategoryDocument[]> {
     return this.categoryModel.find({
-      title: { $regex: title, $options: 'i' },
+      title: { $regex: searchCriteria.title, $options: 'i' },
     });
   }
 }
