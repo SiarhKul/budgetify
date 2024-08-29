@@ -15,6 +15,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './auth/auth.guard';
 import { TParamsEnvVar } from './ts/config/config.union';
 import { StatisticModule } from './statistic/statistic.module';
+import { CategoryModule } from './category/category.module';
+import { Category, CategorySchema } from './schemas/category.schema';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { StatisticModule } from './statistic/statistic.module';
       inject: [ConfigService],
     }),
     StatisticModule,
+    CategoryModule,
   ],
   providers: [
     {

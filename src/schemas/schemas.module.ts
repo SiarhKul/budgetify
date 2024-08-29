@@ -10,6 +10,7 @@ import {
   PiggyBankDepositSchema,
 } from './piggy-bank-deposit.schema';
 import { Subscription, SubscriptionSchema } from './subscription.schema';
+import { Category, CategorySchema } from './category.schema';
 
 const schemas = MongooseModule.forFeature([
   {
@@ -40,6 +41,7 @@ const schemas = MongooseModule.forFeature([
     name: Subscription.name,
     schema: SubscriptionSchema,
   },
+  { name: Category.name, schema: CategorySchema },
 ]);
 
 @Module({
