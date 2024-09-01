@@ -1,22 +1,40 @@
-const config = {
-  mongodb: {
-    url: 'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses',
+import { ENVs, getEnv } from './utils/env-util';
 
-    databaseName: 'test',
-  },
-
+const baseConfig = {
   migrationsDir: 'migrations',
-
   changelogCollectionName: 'changelog',
-
   migrationFileExtension: '.js',
-
   useFileHash: false,
-
-  // Don't change this, unless you know what you're doing
-  // moduleSystem: 'commonjs',
 };
 
-console.log('=========================', process.env.NODE_ENV);
+const envConfigs = {
+  [ENVs.dev]: {
+    ...baseConfig,
+    mongodb: {
+      url: 'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses',
+      databaseName: 'test',
+    },
+  },
+  [ENVs.test]: {
+    ...baseConfig,
+    mongodb: {
+      url: '',
+      databaseName: '',
+    },
+  },
+  [ENVs.prod]: {
+    ...baseConfig,
+    mongodb: {
+      url: '',
+      databaseName: '',
+    },
+  },
+};
 
-module.exports = config;
+const config =
+  envConfigs[getEnv()] ||
+  (() => {
+    throw new Error('Invalid environment');
+  })();
+
+export default config;
