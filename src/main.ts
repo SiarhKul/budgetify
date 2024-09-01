@@ -6,7 +6,7 @@ import { ExceptionsLoggerFilter } from './filters/exception-loger.filter';
 import { runMigrations } from '../config/migrations-setup';
 import { Logger } from '@nestjs/common';
 
-const logger = new Logger('MAIN');
+const logger = new Logger('Migration');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

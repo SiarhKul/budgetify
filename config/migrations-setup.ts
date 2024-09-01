@@ -1,8 +1,9 @@
-import { config, database, status, up } from 'migrate-mongo';
+// import migrateMongoConfig from 'migrate-mongo-config';
 import * as migrateMongoConfig from 'migrate-mongo-config';
+import { config, database, status, up } from 'migrate-mongo';
 import type { Logger } from '@nestjs/common';
 
-export async function runMigrations(logger: Logger) {
+export async function runMigrations(logger: Logger): Promise<void> {
   config.set(migrateMongoConfig);
 
   const { db, client } = await database.connect();
@@ -14,11 +15,11 @@ export async function runMigrations(logger: Logger) {
   );
 
   const migrated = await up(db, client);
-  migrated.forEach((fileName) => logger.debug('Migrated:', fileName));
+  migrated.forEach((fileName) => logger.log('Migrated:', fileName));
 
   const migrationStatus = await status(db);
   migrationStatus.forEach(({ fileName, appliedAt }) =>
-    logger.log(`${fileName}: ${appliedAt}`),
+    logger.log(`Migrations status - file: ${fileName} at ${appliedAt}`),
   );
 
   await client.close();
