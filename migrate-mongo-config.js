@@ -1,5 +1,3 @@
-// In this file you can configure migrate-mongo
-
 const config = {
   mongodb: {
     url: 'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses',
@@ -11,12 +9,14 @@ const config = {
 
   changelogCollectionName: 'changelog',
 
-  migrationFileExtension: '.ts',
+  migrationFileExtension: '.js',
 
   useFileHash: false,
 
   // Don't change this, unless you know what you're doing
   // moduleSystem: 'commonjs',
 };
+
+console.log('=========================', process.env.NODE_ENV);
 
 module.exports = config;
