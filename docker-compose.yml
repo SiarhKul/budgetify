@@ -1,0 +1,17 @@
+version: "3.9"
+
+volumes:
+  db-data:
+
+services:
+  database:
+    container_name: migration-database
+    image: postgres:14.1
+    environment:
+      POSTGRES_DB: "migration_db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
