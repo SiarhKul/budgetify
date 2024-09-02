@@ -3,12 +3,13 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { MongoExceptionFilter } from './filters/exception-mongoose-error.filter';
 import { ExceptionsLoggerFilter } from './filters/exception-loger.filter';
-import { runMigrations } from '../setup/migrations-setup';
+import { runMigrations } from '../setup/migrations.setup';
 import { Logger } from '@nestjs/common';
-import { connectPostgres } from '../setup/postgres.config';
-import { Client } from 'pg';
+import { connectPostgres } from '../setup/postgres.setup';
+import '../setup/env-loader.setup';
 
 const logger = new Logger('Migration');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -22,6 +23,6 @@ async function bootstrap() {
 }
 
 runMigrations(logger).catch((err) => logger.error(err));
-connectPostgres().catch((err) => logger.error('44444444444444', err));
+connectPostgres(logger).catch((err) => logger.error(err));
 
 bootstrap();
