@@ -1,11 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Client } = require('pg');
 
 const dbConfig = {
-  user: process.env.POSTGRES_USER,
-  host: process.env.POSTGRES_HOST,
-  database: process.env.POSTGRES_DB,
-  password: process.env.POSTGRES_PASSWORD,
-  port: process.env.POSTGRES_PORT,
+  user: 'user',
+  host: 'localhost',
+  database: 'migration_db',
+  password: 'password',
+  port: 5432,
 };
 
 const connectPostgres = async (logger) => {
@@ -18,7 +19,6 @@ const connectPostgres = async (logger) => {
     const result = await client.query('SELECT * FROM users');
     logger.log('Query result:', result.rows);
     return result.rows;
-
   } catch (err) {
     logger.error('Error executing query', err);
   } finally {
@@ -30,5 +30,7 @@ const connectPostgres = async (logger) => {
     }
   }
 };
-
-module.exports = { connectPostgres };
+connectPostgres({
+  log: console.log,
+  error: console.error,
+}).then((r) => console.log('Postgres data========================:', r));
