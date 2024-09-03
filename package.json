@@ -17,7 +17,8 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:cov": "cross-env NODE_ENV=test jest --coverage",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json"
+    "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "migrate": "node --env-file=.env.dev setup/postgres.setup.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +30,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@types/migrate-mongo": "^10.0.4",
     "@types/mongoose": "^5.11.97",
+    "@types/pg": "^8.11.8",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

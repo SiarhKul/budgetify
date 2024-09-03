@@ -1,4 +1,4 @@
-import migrateMongoConfig from 'migrate-mongo-config';
+import { migrateMongoConfig } from 'migrate-mongo-config';
 import { config, database, status, up } from 'migrate-mongo';
 import type { Logger } from '@nestjs/common';
 

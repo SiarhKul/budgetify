@@ -1,4 +1,5 @@
-import { ENVs, getEnv } from './utils/env-util';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ENVs, getEnv } = require('./utils/env-util');
 
 const baseConfig = {
   migrationsDir: 'migrations',
@@ -31,10 +32,12 @@ const envConfigs = {
   },
 };
 
-const config =
+const migrateMongoConfig =
   envConfigs[getEnv()] ||
   (() => {
     throw new Error('Invalid environment');
   })();
 
-export default config;
+module.exports = {
+  migrateMongoConfig,
+};

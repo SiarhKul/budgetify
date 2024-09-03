@@ -1,14 +1,21 @@
-import { Client } from 'pg';
+const { Client } = require('pg');
+// const dotenv = require('dotenv');
+//
+// dotenv.config({
+//   path: `.env.dev`,
+//   debug: true,
+//   override: true,
+// });
 
 const dbConfig = {
-  user: 'user',
-  host: 'localhost',
-  database: 'migration_db',
-  password: 'password',
-  port: 5432,
+  user: process.env.POSTGRES_USER,
+  host: process.env.POSTGRES_HOST,
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  port: process.env.POSTGRES_PORT,
 };
 
-export const connectPostgres = async (logger) => {
+const connectPostgres = async (logger) => {
   const client = new Client(dbConfig);
 
   try {
@@ -17,6 +24,8 @@ export const connectPostgres = async (logger) => {
 
     const result = await client.query('SELECT * FROM users');
     logger.log('Query result:', result.rows);
+    return result.rows;
+
   } catch (err) {
     logger.error('Error executing query', err);
   } finally {
@@ -28,3 +37,7 @@ export const connectPostgres = async (logger) => {
     }
   }
 };
+
+module.exports = { connectPostgres };
+
+// connectPostgres({ log: console.log, error: console.error });
