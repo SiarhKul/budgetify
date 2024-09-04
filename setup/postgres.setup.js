@@ -1,21 +1,16 @@
 const { Client } = require('pg');
 
-const dbConfig = {
-  user: process.env.POSTGRES_USER,
-  host: process.env.POSTGRES_HOST,
-  database: process.env.POSTGRES_DB,
-  password: process.env.POSTGRES_PASSWORD,
-  port: process.env.POSTGRES_PORT,
-};
-
-const connectPostgres = async (logger) => {
+const retrieveDataFromPostgres = async (pgQuery, dbConfig, logger={
+  log: console.log,
+  error: console.error,
+}) => {
   const client = new Client(dbConfig);
 
   try {
     await client.connect();
     logger.log('Connected to PostgreSQL database');
 
-    const result = await client.query('SELECT * FROM users');
+    const result = await client.query(pgQuery);
     logger.log('Query result:', result.rows);
     return result.rows;
 
@@ -31,4 +26,4 @@ const connectPostgres = async (logger) => {
   }
 };
 
-module.exports = { connectPostgres };
+module.exports = {  retrieveDataFromPostgres };
