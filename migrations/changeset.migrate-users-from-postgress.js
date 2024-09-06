@@ -1,29 +1,18 @@
-const {  retrieveDataFromPostgres } = require('../setup/postgres.setup');
-const {
-  mapUserPGDBtoUserMongoDB,
-} = require('../src/migrations-manual/migrations-manual');
+const { retrieveDataFromPostgres } = require('../setup/postgres.setup');
 
-const dbConfig = {
-  user: process.env.POSTGRES_USER,
-  host: process.env.POSTGRES_HOST,
-  database: process.env.POSTGRES_DB,
-  password: process.env.POSTGRES_PASSWORD,
-  port: process.env.POSTGRES_PORT,
-};
+// const { mapUserPGDBtoUserMongoDB } = require('../src/migrations-manual/migrations-manual.mapper');
+
+const pgQuery = 'SELECT * FROM users';
 
 module.exports = {
   async up(db, client) {
-    const pgQuery = 'SELECT * FROM users'
 
-    const res = await retrieveDataFromPostgres({
-      log: console.log,
-      error: console.error,
-    },
-    dbConfig,
-    );
-    const userMongoDb = mapUserPGDBtoUserMongoDB(res);
-    console.log('Postgres data========================:', res);
+    // const res = await retrieveDataFromPostgres(pgQuery);
+    // const userMongoDb = mapUserPGDBtoUserMongoDB(res);
+    // console.log('Postgres data========================:', res);
+    // console.log('mapped data --------------------', userMongoDb);
   },
 
-  async down(db, client) {},
+  async down(db, client) {
+  },
 };

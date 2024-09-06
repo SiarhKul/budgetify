@@ -15,6 +15,7 @@ export const useFactoryReturn = (
   logger.log(`MongoDB connection string: ${maskedUri}`);
 
   return {
+    connectTimeoutMS: 100000,
     uri,
   };
 };
