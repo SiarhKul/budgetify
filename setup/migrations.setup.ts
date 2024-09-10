@@ -13,8 +13,12 @@ export async function runMigrations(logger: Logger): Promise<void> {
     `Mongo Connection Settings from migrate-mongo-config.js: ${JSON.stringify(mongoConnectionSettings, null, 2)}`,
   );
 
-  const migrated = await up(db, client);
-  migrated.forEach((fileName) => logger.log(`Migrated:${fileName}`));
+  try {
+    const migrated = await up(db, client);
+    migrated.forEach((fileName) => logger.log(`Migrated:${fileName}`));
+  } catch (e) {
+    logger.error(e);
+  }
 
   const migrationStatus = await status(db);
 

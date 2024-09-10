@@ -12,7 +12,7 @@ const envConfigs = {
   [ENVs.dev]: {
     ...baseConfig,
     mongodb: {
-      url: 'mongodb+srv://admin:12345@aducationscourses.a4vyllo.mongodb.net/?retryWrites=true&w=majority&appName=AducationsCourses',
+      url: 'mongodb://admin:12345@localhost:27017/',
       databaseName: 'test',
     },
   },

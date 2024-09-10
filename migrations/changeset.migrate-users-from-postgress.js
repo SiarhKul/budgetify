@@ -20,8 +20,8 @@ module.exports = {
 
     const pgUsers = await retrieveDataFromPostgres(pgQuery);
     const mongoDbUsers =mapToMongoDbUsers(pgUsers)
-    console.log('Postgres data========================:', res);
-    console.log('mapped data --------------------', userMongoDb);
+    console.log('pgUsers', pgUsers);
+    console.log('mongoDbUsers',mongoDbUsers)
   },
 
   async down(db, client) {
