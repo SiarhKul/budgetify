@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { ENVs, getEnv } = require('./utils/env-util');
 
 const baseConfig = {

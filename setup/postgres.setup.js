@@ -8,6 +8,12 @@ const dbConfig = {
   port: process.env.POSTGRES_PORT,
 };
 
+
+/**
+ * Maps an array of Postgres users to MongoDB users format.
+ *
+ * @returns {Promise< IUserPGDB[]>} - The array of users formatted for MongoDB.
+ */
 const retrieveDataFromPostgres = async (pgQuery, logger={
   log: console.log,
   error: console.error,

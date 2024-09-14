@@ -19,11 +19,15 @@ module.exports = {
   async up(db, client) {
 
     const pgUsers = await retrieveDataFromPostgres(pgQuery);
-    const mongoDbUsers =mapToMongoDbUsers(pgUsers)
+    const mongoDbUsers = mapToMongoDbUsers(pgUsers)
     console.log('pgUsers', pgUsers);
     console.log('mongoDbUsers',mongoDbUsers)
+
+    await db.collection('postgresUsers').insertMany(mongoDbUsers)
+
   },
 
   async down(db, client) {
+    db.collection('postgresUsers').drop()
   },
 };

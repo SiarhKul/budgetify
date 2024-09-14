@@ -5,7 +5,6 @@ import { MongoExceptionFilter } from './filters/exception-mongoose-error.filter'
 import { ExceptionsLoggerFilter } from './filters/exception-loger.filter';
 import { runMigrations } from '../setup/migrations.setup';
 import { Logger } from '@nestjs/common';
-// import { retrieveDataFromPostgres } from '../setup/postgres.setup.js';
 import '../setup/env-loader.setup';
 
 const logger = new Logger('Migration');
@@ -23,6 +22,5 @@ async function bootstrap() {
 }
 
 runMigrations(logger).catch((err) => logger.error(err));
-// retrieveDataFromPostgres(logger).catch((err) => logger.error(err));
 
 bootstrap();
